@@ -20,6 +20,12 @@ module.exports = {
           900: "#1e3a8a",
         },
       },
+      gridTemplateColumns: {
+        adminLeyout: "300px 1fr",
+      },
+      gridTemplateRows: {
+        adminLeyout: "60px 1fr",
+      },
     },
     fontFamily: {
       body: [
