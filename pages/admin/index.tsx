@@ -1,6 +1,8 @@
 import "../../utils/firebase/init";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { atom, useAtom } from "jotai";
+import { Header } from "../../components/Header/Header";
+import { Sidebar } from "../../components/Admin/Sidebar";
 
 type overview = {
   0: boolean;
@@ -21,8 +23,11 @@ const tabAtom = atom<Tab>({
   boxes: { 0: false, 1: false },
 });
 
+const menuAtom = atom<boolean>(false);
+
 const adminPage = () => {
   const [isTab, setTabState] = useAtom(tabAtom);
+  const [isMenu, setMenu] = useAtom(menuAtom);
 
   const changeTab = (title: string, num: number) => {
     if (title == "overview") {
@@ -66,104 +71,146 @@ const adminPage = () => {
 
   return (
     <>
-      <section>
-        <aside className="fixed top-0 left-0 w-64 h-full" aria-label="Sidenav">
-          <div className="overflow-y-auto py-5 px-3 h-full bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700">
-            <ul className="space-y-2">
-              <li>
-                <button
-                  type="button"
-                  className={`flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group w-full ${
-                    isTab.overview[0] ? "bg-gray-700" : ""
-                  }`}
-                  onClick={() => changeTab("overview", 0)}
-                >
-                  <svg
-                    aria-hidden="true"
-                    className="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path>
-                    <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>
-                  </svg>
-                  <span className="ml-3">Overview</span>
-                </button>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  className={`flex items-center p-2 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 ${
-                    isExit(isTab.boxes) ? "bg-gray-700" : ""
-                  }`}
-                  aria-controls="dropdown-pages"
-                  data-collapse-toggle="dropdown-pages"
-                  onClick={() => changeTab("boxes", 0)}
-                >
-                  <svg
-                    aria-hidden="true"
-                    className="flex-shrink-0 w-6 h-6 text-gray-400 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z"
-                      clip-rule="evenodd"
-                    ></path>
-                  </svg>
-                  <span className="flex-1 ml-3 text-left whitespace-nowrap">
-                    Boxes
-                  </span>
-                  <svg
-                    aria-hidden="true"
-                    className="w-6 h-6"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                      clip-rule="evenodd"
-                    ></path>
-                  </svg>
-                </button>
-                <ul
-                  id="dropdown-pages"
-                  className={`py-2 space-y-2 ${
-                    isExit(isTab.boxes) ? "block" : "hidden"
-                  }`}
-                >
-                  <li>
-                    <button
-                      type="button"
-                      className={`flex items-center p-2 pl-11 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 ${
-                        isTab.boxes[0] ? "bg-gray-700" : ""
-                      }`}
-                      onClick={() => changeTab("boxes", 0)}
-                    >
-                      total
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      type="button"
-                      className={`flex items-center p-2 pl-11 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 ${
-                        isTab.boxes[1] ? "bg-gray-700" : ""
-                      }`}
-                      onClick={() => changeTab("boxes", 1)}
-                    >
-                      List
-                    </button>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </div>
-        </aside>
+      <section className="md:grid grid-cols-adminLeyout grid-rows-adminLeyout min-h-screen">
+        <Header isMenu={isMenu} setMenu={setMenu} />
+        <Sidebar
+          isMenu={isMenu}
+          isTab={isTab}
+          isExit={isExit}
+          changeTab={changeTab}
+        />
+        <main className="row-[2] col-[2]">
+          {isTab.overview[0] ? (
+            <div>
+              <section className="bg-white dark:bg-gray-900">
+                <div className="max-w-screen-xl px-4 py-8 mx-auto text-center lg:py-16 lg:px-6">
+                  <dl className="grid max-w-screen-md gap-8 mx-auto text-gray-900 sm:grid-cols-3 dark:text-white">
+                    <div className="flex flex-col items-center justify-center">
+                      <dt className="mb-2 text-3xl md:text-4xl font-extrabold">
+                        73M+
+                      </dt>
+                      <dd className="font-light text-gray-500 dark:text-gray-400">
+                        ユーザー数
+                      </dd>
+                    </div>
+                    <div className="flex flex-col items-center justify-center">
+                      <dt className="mb-2 text-3xl md:text-4xl font-extrabold">
+                        1B+
+                      </dt>
+                      <dd className="font-light text-gray-500 dark:text-gray-400">
+                        投票数
+                      </dd>
+                    </div>
+                    <div className="flex flex-col items-center justify-center">
+                      <dt className="mb-2 text-3xl md:text-4xl font-extrabold">
+                        4M+
+                      </dt>
+                      <dd className="font-light text-gray-500 dark:text-gray-400">
+                        投票率
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
+              </section>
+            </div>
+          ) : isTab.boxes[0] ? (
+            <>
+              {" "}
+              <section className="bg-white dark:bg-gray-900">
+                <div className="max-w-screen-xl px-4 py-8 mx-auto text-center lg:py-16 lg:px-6">
+                  <dl className="grid max-w-screen-md gap-8 mx-auto text-gray-900 sm:grid-cols-2 dark:text-white">
+                    <div className="flex flex-col items-center justify-center">
+                      <dt className="mb-2 text-3xl md:text-4xl font-extrabold">
+                        A
+                      </dt>
+                      <dd className=" text-gray-500 dark:text-gray-400">
+                        100票
+                      </dd>
+                    </div>
+                    <div className="flex flex-col items-center justify-center">
+                      <dt className="mb-2 text-3xl md:text-4xl font-extrabold">
+                        B
+                      </dt>
+                      <dd className=" text-gray-500 dark:text-gray-400">
+                        100票
+                      </dd>
+                    </div>
+                    <div className="flex flex-col items-center justify-center">
+                      <dt className="mb-2 text-3xl md:text-4xl font-extrabold">
+                        C
+                      </dt>
+                      <dd className=" text-gray-500 dark:text-gray-400">
+                        100票
+                      </dd>
+                    </div>
+                    <div className="flex flex-col items-center justify-center">
+                      <dt className="mb-2 text-3xl md:text-4xl font-extrabold">
+                        D
+                      </dt>
+                      <dd className=" text-gray-500 dark:text-gray-400">
+                        100票
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
+              </section>
+            </>
+          ) : isTab.boxes[1] ? (
+            <>
+              <div className="overflow-x-auto relative">
+                <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                  <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                      <th scope="col" className="py-3 px-6">
+                        名前
+                      </th>
+                      <th scope="col" className="py-3 px-6">
+                        作成者
+                      </th>
+                      <th scope="col" className="py-3 px-6">
+                        投票数
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                      <th
+                        scope="row"
+                        className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      >
+                        Apple MacBook Pro 17"
+                      </th>
+                      <td className="py-4 px-6">Sliver</td>
+                      <td className="py-4 px-6">Laptop</td>
+                    </tr>
+                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                      <th
+                        scope="row"
+                        className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      >
+                        Microsoft Surface Pro
+                      </th>
+                      <td className="py-4 px-6">White</td>
+                      <td className="py-4 px-6">Laptop PC</td>
+                    </tr>
+                    <tr className="bg-white dark:bg-gray-800">
+                      <th
+                        scope="row"
+                        className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      >
+                        Magic Mouse 2
+                      </th>
+                      <td className="py-4 px-6">Black</td>
+                      <td className="py-4 px-6">Accessories</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </>
+          ) : (
+            <></>
+          )}
+        </main>
       </section>
     </>
   );
