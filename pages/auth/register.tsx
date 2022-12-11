@@ -2,8 +2,8 @@ import "../../utils/firebase/init";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { atom, useAtom } from "jotai";
 
-const emailAtom = atom("sample@sample.com");
-const passwordAtom = atom("password");
+const emailAtom = atom("");
+const passwordAtom = atom("");
 
 const registerPage = () => {
   const [isEmail, setEmail] = useAtom(emailAtom);
