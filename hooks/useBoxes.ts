@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import { Box, getBoxes } from "../utils/firebase/boxes";
 
 export type UseBoxesOutput = {
@@ -11,7 +12,7 @@ const DEFAULT_OUTPUT: UseBoxesOutput = {
   boxes: [],
 };
 
-export function useBoxes(): UseBoxesOutput {
+export const useBoxes = (): UseBoxesOutput => {
   const [output, setOutput] = useState(DEFAULT_OUTPUT);
 
   useEffect(() => {
@@ -22,4 +23,4 @@ export function useBoxes(): UseBoxesOutput {
   }, []);
 
   return output;
-}
+};
