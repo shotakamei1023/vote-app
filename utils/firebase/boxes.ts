@@ -5,7 +5,6 @@ import {
   getFirestore,
   query,
   orderBy,
-  where,
 } from "firebase/firestore";
 
 export type Box = {
