@@ -1,17 +1,17 @@
 import "../../utils/firebase/init";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { atom, useAtom } from "jotai";
 
 const emailAtom = atom("sample@sample.com");
 const passwordAtom = atom("password");
 
-const loginPage = () => {
+const registerPage = () => {
   const [isEmail, setEmail] = useAtom(emailAtom);
   const [isPassword, setPassword] = useAtom(passwordAtom);
 
-  const signin = () => {
+  const signup = () => {
     const auth = getAuth();
-    signInWithEmailAndPassword(auth, isEmail, isPassword)
+    createUserWithEmailAndPassword(auth, isEmail, isPassword)
       .then((userCredential) => {
         const user = userCredential.user;
         console.log("成功");
@@ -29,14 +29,10 @@ const loginPage = () => {
     <>
       <section className="bg-gray-50 dark:bg-gray-900">
         <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-          <a
-            href="#"
-            className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
-          ></a>
           <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
               <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                ログイン画面
+                アカウント作成画面
               </h1>
               <form className="space-y-4 md:space-y-6" action="#">
                 <div>
@@ -77,27 +73,19 @@ const loginPage = () => {
                     }}
                   />
                 </div>
-                <div className="flex items-center justify-between">
-                  <a
-                    href="#"
-                    className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
-                  >
-                    パスワードを忘れた方
-                  </a>
-                </div>
                 <button
                   type="button"
                   className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                  onClick={() => signin()}
+                  onClick={() => signup()}
                 >
-                  ログイン
+                  アカウントを作成する
                 </button>
                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                   <a
                     href="#"
                     className="font-medium text-primary-600 hover:underline dark:text-primary-500"
                   >
-                    アカウントの新規作成はこちら
+                    アカウント作成済みの方はこちら
                   </a>
                 </p>
               </form>
@@ -109,4 +97,4 @@ const loginPage = () => {
   );
 };
 
-export default loginPage;
+export default registerPage;
