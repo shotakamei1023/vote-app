@@ -10,7 +10,7 @@ import {
   where,
 } from "firebase/firestore";
 
-export default function Home() {
+const Home = () => {
   // const db = getFirestore();
   // const usersRef = collection(db, "boxes");
   // getDocs(query(usersRef)).then((snapshot) => {
@@ -20,4 +20,6 @@ export default function Home() {
   // });
 
   return <>{<BoxList />}</>;
-}
+};
+
+export default Home;
