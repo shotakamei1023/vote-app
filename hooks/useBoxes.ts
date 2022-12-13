@@ -1,19 +1,19 @@
-import { useEffect, useState } from "react";
-
+import { useEffect } from "react";
 import { Box, getBoxes } from "../utils/firebase/boxes";
+import { atom, useAtom } from "jotai";
+
+const DEFAULT_OUTPUT = atom<UseBoxesOutput>({
+  isLoading: true,
+  boxes: [],
+});
 
 export type UseBoxesOutput = {
   isLoading: boolean;
   boxes: Box[];
 };
 
-const DEFAULT_OUTPUT: UseBoxesOutput = {
-  isLoading: true,
-  boxes: [],
-};
-
 export const useBoxes = (): UseBoxesOutput => {
-  const [output, setOutput] = useState(DEFAULT_OUTPUT);
+  const [output, setOutput] = useAtom(DEFAULT_OUTPUT);
 
   useEffect(() => {
     void (async () => {
