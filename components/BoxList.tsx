@@ -1,8 +1,19 @@
+import { async } from "@firebase/util";
 import { useBoxes } from "../hooks/useBoxes";
+import { doc, addDoc, getFirestore, collection } from "firebase/firestore";
 
 export const BoxList = () => {
   const { isLoading, boxes } = useBoxes();
   if (isLoading) return <p>Loading...</p>;
+
+  const vote = async (id: string) => {
+    const db = getFirestore();
+    await addDoc(collection(db, "boxes", id, "votes"), {
+      box_id: id,
+      user_id: "vokSGoCLplaRDvmgtoT7WPRJx4X2",
+    });
+  };
+
   return (
     <section className="bg-white dark:bg-gray-900">
       <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6 ">
@@ -17,7 +28,7 @@ export const BoxList = () => {
         <ul className="grid gap-8 mb-6 lg:mb-16 md:grid-cols-2">
           {boxes.map((box: any, index: number) => {
             return (
-              <li>
+              <li key={index}>
                 <div className="items-center bg-gray-50 rounded-lg shadow sm:flex dark:bg-gray-800 dark:border-gray-700">
                   <a href="#">
                     <img
@@ -36,7 +47,11 @@ export const BoxList = () => {
                     <p className="mt-3 mb-4 font-light text-gray-500 dark:text-gray-400">
                       ここに紹介文が入ります。
                     </p>
-                    <button className="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800">
+                    <button
+                      type="button"
+                      onClick={() => vote(box.id)}
+                      className="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800"
+                    >
                       <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
                         投票する
                       </span>
