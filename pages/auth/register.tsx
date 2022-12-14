@@ -13,7 +13,6 @@ const Error = atom({
   email: false,
   password: false,
 });
-
 const ErrorMessage = atom("");
 
 const registerPage: NextPage = () => {
