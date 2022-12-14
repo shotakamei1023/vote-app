@@ -56,7 +56,10 @@ export const Main = ({ isTab }: any) => {
                 <dl className="grid max-w-screen-md gap-8 mx-auto text-gray-900 sm:grid-cols-2 dark:text-white">
                   {boxes.map((item: any, index: number) => {
                     return (
-                      <div className="flex flex-col items-center justify-center">
+                      <div
+                        className="flex flex-col items-center justify-center"
+                        key={index}
+                      >
                         <dt className="mb-2 text-3xl md:text-4xl font-extrabold">
                           {item.name}
                         </dt>
@@ -87,7 +90,10 @@ export const Main = ({ isTab }: any) => {
                 <tbody>
                   {boxes.map((item: any, index: number) => {
                     return (
-                      <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                      <tr
+                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                        key={index}
+                      >
                         <th
                           scope="row"
                           className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"

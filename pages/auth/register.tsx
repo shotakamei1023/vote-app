@@ -1,11 +1,15 @@
 import "../../utils/firebase/init";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc, getFirestore, collection } from "firebase/firestore";
 import { atom, useAtom } from "jotai";
+import { NextPage } from "next";
 
+const nameAtom = atom("");
 const emailAtom = atom("");
 const passwordAtom = atom("");
 
-const registerPage = () => {
+const registerPage: NextPage = () => {
+  const [isName, setName] = useAtom(nameAtom);
   const [isEmail, setEmail] = useAtom(emailAtom);
   const [isPassword, setPassword] = useAtom(passwordAtom);
 
@@ -16,6 +20,16 @@ const registerPage = () => {
         const user = userCredential.user;
         console.log("成功");
         console.log(user);
+        //usersテーブルにも保存
+        return user;
+      })
+      .then((user) => {
+        const db = getFirestore();
+        setDoc(doc(db, "users", user.uid), {
+          name: isName,
+          auth_id: isEmail,
+          role: 1,
+        });
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -35,6 +49,25 @@ const registerPage = () => {
                 アカウント作成画面
               </h1>
               <form className="space-y-4 md:space-y-6" action="#">
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    名前
+                  </label>
+                  <input
+                    type="text"
+                    name="text"
+                    id="text"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="田中太郎"
+                    required
+                    onChange={(event) => {
+                      setName(event.target.value);
+                    }}
+                  />
+                </div>
                 <div>
                   <label
                     htmlFor="email"

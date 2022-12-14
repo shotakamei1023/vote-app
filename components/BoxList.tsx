@@ -1,6 +1,7 @@
 import { async } from "@firebase/util";
 import { useBoxes } from "../hooks/useBoxes";
 import { doc, addDoc, getFirestore, collection } from "firebase/firestore";
+import Image from "next/image";
 
 export const BoxList = () => {
   const { isLoading, boxes } = useBoxes();
@@ -31,10 +32,14 @@ export const BoxList = () => {
               <li key={index}>
                 <div className="items-center bg-gray-50 rounded-lg shadow sm:flex dark:bg-gray-800 dark:border-gray-700">
                   <a href="#">
-                    <img
+                    <Image
+                      src={
+                        "https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/sofia-mcguire.png"
+                      }
+                      alt="プロフィール写真"
                       className="w-full rounded-lg sm:rounded-none sm:rounded-l-lg"
-                      src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/sofia-mcguire.png"
-                      alt="Sofia Avatar"
+                      width={300}
+                      height={300}
                     />
                   </a>
                   <div className="p-5">
