@@ -3,17 +3,59 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, getFirestore, collection } from "firebase/firestore";
 import { atom, useAtom } from "jotai";
 import { NextPage } from "next";
+import { useRouter } from "next/router";
 
 const nameAtom = atom("");
 const emailAtom = atom("");
 const passwordAtom = atom("");
+const create = atom(true);
+const Error = atom({
+  email: false,
+  password: false,
+});
+
+const ErrorMessage = atom("");
 
 const registerPage: NextPage = () => {
   const [isName, setName] = useAtom(nameAtom);
   const [isEmail, setEmail] = useAtom(emailAtom);
   const [isPassword, setPassword] = useAtom(passwordAtom);
+  const [isError, setError] = useAtom(Error);
+  const [iscreate, setcreate] = useAtom(create);
+  const [isErrorMessage, setErrorMessage] = useAtom(ErrorMessage);
+  const router = useRouter();
+
+  //メールアドレスの正規表現（半角英数４桁に一致）
+  var regex = new RegExp(
+    /^[a-zA-Z0-9_.+-]+@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.)+[a-zA-Z]{2,}$/
+  );
+  const chackEmail = (value: string) => {
+    //判定
+    setError({
+      email: !regex.test(value),
+      password: false,
+    });
+    return !regex.test(value);
+  };
+
+  const chackPassword = (value: string) => {
+    if (value.length < 6) {
+      setError({
+        email: isError.email,
+        password: true,
+      });
+      return true;
+    } else {
+      setError({
+        email: isError.email,
+        password: false,
+      });
+      return false;
+    }
+  };
 
   const signup = () => {
+    setcreate(false);
     const auth = getAuth();
     createUserWithEmailAndPassword(auth, isEmail, isPassword)
       .then((userCredential) => {
@@ -30,6 +72,10 @@ const registerPage: NextPage = () => {
           auth_id: isEmail,
           role: 1,
         });
+        setcreate(true);
+      })
+      .then(() => {
+        router.push("/");
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -37,7 +83,17 @@ const registerPage: NextPage = () => {
         console.log("失敗");
         console.log(errorCode);
         console.log(errorMessage);
+        setErrorMessage(errorMessage);
+        setcreate(true);
       });
+  };
+
+  const changeMessage = (value: string) => {
+    if (value == "Firebase: Error (auth/email-already-in-use).") {
+      return "既にこちらのメールアドレスは登録されています。";
+    } else {
+      return value;
+    }
   };
   return (
     <>
@@ -84,8 +140,18 @@ const registerPage: NextPage = () => {
                     required
                     onChange={(event) => {
                       setEmail(event.target.value);
+                      chackEmail(event.target.value);
                     }}
                   />
+                  {isError.email && isEmail ? (
+                    <p className="mt-2 text-sm text-red-600 dark:text-red-500">
+                      <span className="font-medium">
+                        username@example.comの形式で入力ください
+                      </span>
+                    </p>
+                  ) : (
+                    <></>
+                  )}
                 </div>
                 <div>
                   <label
@@ -103,16 +169,37 @@ const registerPage: NextPage = () => {
                     required
                     onChange={(event) => {
                       setPassword(event.target.value);
+                      chackPassword(event.target.value);
                     }}
                   />
+                  {isError.password && isPassword ? (
+                    <p className="mt-2 text-sm text-red-600 dark:text-red-500">
+                      <span className="font-medium">6文字以上入力ください</span>
+                    </p>
+                  ) : (
+                    <></>
+                  )}
                 </div>
                 <button
                   type="button"
-                  className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                  className={`w-full text-white focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:focus:ring-primary-800 ${
+                    isName &&
+                    isEmail &&
+                    isPassword &&
+                    isError.email == false &&
+                    isError.password == false
+                      ? "pointer-events-auto bg-primary-600 hover:bg-primary-700 dark:bg-primary-600 dark:hover:bg-primary-700"
+                      : "pointer-events-none dark:bg-primary-900"
+                  } ${
+                    iscreate ? "pointer-events-auto" : "pointer-events-none"
+                  }`}
                   onClick={() => signup()}
                 >
-                  アカウントを作成する
+                  {iscreate ? "アカウントを作成する" : "アカウントを作成中です"}
                 </button>
+                <p className="text-sm text-red-600 dark:text-red-500">
+                  {isErrorMessage ? changeMessage(isErrorMessage) : ""}
+                </p>
                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                   <a
                     href="#"
