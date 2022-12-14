@@ -93,7 +93,7 @@ export const Sidebar = ({ isMenu, isTab, isExit, changeTab }: any) => {
                     }`}
                     onClick={() => changeTab("boxes", 1)}
                   >
-                    List
+                    graph
                   </button>
                 </li>
               </ul>
