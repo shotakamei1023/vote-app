@@ -7,10 +7,67 @@ import {
   getFirestore,
   getDoc,
 } from "firebase/firestore";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { Bar } from "react-chartjs-2";
+import { useUsers } from "../../hooks/useUsers";
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 export const Main = ({ isTab }: any) => {
   const { isLoading, boxes } = useBoxes();
+  const { users } = useUsers();
   if (isLoading) return <p>Loading...</p>;
+
+  //データ整理
+  const labels = boxes.map((item) => item.name);
+  const values = boxes.map((item) => Number(item.count));
+
+  //投票数
+  const boxvotesCount: number = values.reduce((sum, element) => {
+    return sum + element;
+  });
+
+  //ユーザー数
+  const userCount = users.length;
+
+  const graphData = {
+    labels: labels,
+    datasets: [
+      {
+        data: values,
+        backgroundColor: [
+          "rgba(255, 99, 132, 0.2)",
+          "rgba(255, 159, 64, 0.2)",
+          "rgba(255, 205, 86, 0.2)",
+          "rgba(75, 192, 192, 0.2)",
+        ],
+      },
+    ],
+  };
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+  };
 
   return (
     <>
@@ -22,7 +79,7 @@ export const Main = ({ isTab }: any) => {
                 <dl className="grid max-w-screen-md gap-8 mx-auto text-gray-900 sm:grid-cols-3 dark:text-white">
                   <div className="flex flex-col items-center justify-center">
                     <dt className="mb-2 text-3xl md:text-4xl font-extrabold">
-                      73M+
+                      {userCount}
                     </dt>
                     <dd className="font-light text-gray-500 dark:text-gray-400">
                       ユーザー数
@@ -30,7 +87,7 @@ export const Main = ({ isTab }: any) => {
                   </div>
                   <div className="flex flex-col items-center justify-center">
                     <dt className="mb-2 text-3xl md:text-4xl font-extrabold">
-                      1B+
+                      {boxvotesCount}
                     </dt>
                     <dd className="font-light text-gray-500 dark:text-gray-400">
                       投票数
@@ -38,7 +95,7 @@ export const Main = ({ isTab }: any) => {
                   </div>
                   <div className="flex flex-col items-center justify-center">
                     <dt className="mb-2 text-3xl md:text-4xl font-extrabold">
-                      4M+
+                      {Math.round(100 * (userCount / boxvotesCount))}%
                     </dt>
                     <dd className="font-light text-gray-500 dark:text-gray-400">
                       投票率
@@ -75,37 +132,14 @@ export const Main = ({ isTab }: any) => {
           </>
         ) : isTab.boxes[1] ? (
           <>
-            <div className="overflow-x-auto relative">
-              <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                  <tr>
-                    <th scope="col" className="py-3 px-6">
-                      名前
-                    </th>
-                    <th scope="col" className="py-3 px-6">
-                      投票数
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {boxes.map((item: any, index: number) => {
-                    return (
-                      <tr
-                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                        key={index}
-                      >
-                        <th
-                          scope="row"
-                          className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                        >
-                          {item.name}
-                        </th>
-                        <td className="py-4 px-6">{item.count}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+            <div className="mx-auto mt-8">
+              <Bar
+                height={100}
+                width={200}
+                data={graphData}
+                options={options}
+                id="chart-key"
+              />
             </div>
           </>
         ) : (
