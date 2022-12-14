@@ -4,10 +4,12 @@ import { atom, useAtom } from "jotai";
 
 const emailAtom = atom("");
 const passwordAtom = atom("");
+const ErrorMessage = atom("");
 
 const loginPage = () => {
   const [isEmail, setEmail] = useAtom(emailAtom);
   const [isPassword, setPassword] = useAtom(passwordAtom);
+  const [isErrorMessage, setErrorMessage] = useAtom(ErrorMessage);
 
   const signin = () => {
     const auth = getAuth();
@@ -23,7 +25,15 @@ const loginPage = () => {
         console.log("失敗");
         console.log(errorCode);
         console.log(errorMessage);
+        setErrorMessage(errorMessage);
       });
+  };
+  const changeMessage = (value: string) => {
+    if (value == "Firebase: Error (auth/user-not-found).") {
+      return "アカウントが見つかりません";
+    } else {
+      return value;
+    }
   };
   return (
     <>
@@ -92,6 +102,9 @@ const loginPage = () => {
                 >
                   ログイン
                 </button>
+                <p className="text-sm text-red-600 dark:text-red-500">
+                  {isErrorMessage ? changeMessage(isErrorMessage) : ""}
+                </p>
                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                   <a
                     href="#"
