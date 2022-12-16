@@ -13,9 +13,9 @@ import {
 import { rejects } from "assert";
 
 export type User = {
-  auth_id: string;
-  name: string;
-  role: string;
+  auth_id: string | undefined;
+  name: string | undefined;
+  role: string | undefined;
 };
 
 export const getUsers = async (): Promise<User[]> => {

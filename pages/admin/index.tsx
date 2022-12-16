@@ -1,6 +1,7 @@
 import "../../utils/firebase/init";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { atom, useAtom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
 import { Header } from "../../components/Header/Header";
 import { Sidebar } from "../../components/Admin/Sidebar";
 import { Main } from "../../components/Admin/Main";
@@ -24,11 +25,13 @@ const tabAtom = atom<Tab>({
   boxes: { 0: false, 1: false },
 });
 
-const menuAtom = atom<boolean>(false);
+//headerコンポーネントへ渡す
+export const spMenuAtom = atom(false);
 
 const adminPage = () => {
   const [isTab, setTabState] = useAtom(tabAtom);
-  const [isMenu, setMenu] = useAtom(menuAtom);
+  // 文字列キーと初期値を設定
+  const [isspMenu, setspMenu] = useAtom(spMenuAtom);
 
   const changeTab = (title: string, num: number) => {
     if (title == "overview") {
@@ -64,16 +67,13 @@ const adminPage = () => {
 
   return (
     <>
-      <section className="md:grid grid-cols-adminLeyout grid-rows-adminLeyout min-h-screen">
-        <Header isMenu={isMenu} setMenu={setMenu} />
-        <Sidebar
-          isMenu={isMenu}
-          isTab={isTab}
-          isExit={isExit}
-          changeTab={changeTab}
-        />
-        <Main isTab={isTab} />
-      </section>
+      <Sidebar
+        isspMenu={isspMenu}
+        isTab={isTab}
+        isExit={isExit}
+        changeTab={changeTab}
+      />
+      <Main isTab={isTab} />
     </>
   );
 };

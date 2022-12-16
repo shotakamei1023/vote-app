@@ -1,6 +1,12 @@
 import "../../utils/firebase/init";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithRedirect,
+} from "firebase/auth";
 import { atom, useAtom } from "jotai";
+import { useRouter } from "next/router";
 
 const emailAtom = atom("");
 const passwordAtom = atom("");
@@ -10,6 +16,7 @@ const loginPage = () => {
   const [isEmail, setEmail] = useAtom(emailAtom);
   const [isPassword, setPassword] = useAtom(passwordAtom);
   const [isErrorMessage, setErrorMessage] = useAtom(ErrorMessage);
+  const router = useRouter();
 
   const signin = () => {
     const auth = getAuth();
@@ -18,6 +25,13 @@ const loginPage = () => {
         const user = userCredential.user;
         console.log("成功");
         console.log(user);
+      })
+      // .then(() => {
+      //   const provider = new GoogleAuthProvider();
+      //   return signInWithRedirect(auth, provider);
+      // })
+      .then(() => {
+        router.push("/");
       })
       .catch((error) => {
         const errorCode = error.code;

@@ -23,8 +23,10 @@ module.exports = {
       gridTemplateColumns: {
         adminLeyout: "300px 1fr",
       },
+
       gridTemplateRows: {
         adminLeyout: "60px 1fr",
+        mainLeyout: "60px 1fr",
       },
     },
     fontFamily: {

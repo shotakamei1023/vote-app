@@ -1,8 +1,10 @@
-export const Sidebar = ({ isMenu, isTab, isExit, changeTab }: any) => {
+import { Provider as JotaiProvider, atom, useAtom } from "jotai";
+
+export const Sidebar = ({ isspMenu, isTab, isExit, changeTab }: any) => {
   return (
     <>
       <aside
-        className={`row-[2] col-[1] ${isMenu ? "block" : "hidden"} md:block`}
+        className={`row-[2] col-[1] ${isspMenu ? "block" : "hidden"} md:block`}
         aria-label="Sidenav"
       >
         <div className="overflow-y-auto py-5 px-3 h-full bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700">
