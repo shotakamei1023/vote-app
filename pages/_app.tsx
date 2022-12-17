@@ -47,7 +47,10 @@ export default function App({ Component, pageProps }: AppProps) {
         // User is signed out
         // ...
         console.log("サインアウト");
-        //ログイン画面へ遷移
+        if (path.indexOf("/auth") != -1) {
+        } else {
+          router.push("/auth/register");
+        }
       }
     });
   }, []);
