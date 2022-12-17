@@ -78,7 +78,7 @@ export default function App({ Component, pageProps }: AppProps) {
               : "md:grid grid-cols-adminLeyout grid-rows-adminLeyout"
           } min-h-screen`}
         >
-          <Header name={isAuthInfo.name} />
+          <Header AuthInfo={isAuthInfo} />
           <Component {...pageProps} />
         </div>
       </Layout>

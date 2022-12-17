@@ -4,8 +4,9 @@ import { atom, useAtom } from "jotai";
 
 import { spMenuAtom } from "../../pages/admin/index";
 import { getAuth, signOut } from "firebase/auth";
+import Link from "next/link";
 
-export const Header = memo(({ name }: any) => {
+export const Header = memo(({ AuthInfo }: any) => {
   const router = useRouter();
   const path = router.pathname;
   const [isspMenu, setspMenu] = useAtom(spMenuAtom);
@@ -31,9 +32,18 @@ export const Header = memo(({ name }: any) => {
     >
       <nav className="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
         <div className="flex flex-wrap justify-between items-center">
-          <a href="https://flowbite.com" className="flex items-center"></a>
-          <div className="flex items-center lg:order-2">
-            <p className="text-white">{name ? name : ""}</p>
+          {AuthInfo.role == 0 ? (
+            <Link
+              href="/admin"
+              className="text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800"
+            >
+              管理画面はこちら
+            </Link>
+          ) : (
+            ""
+          )}
+          <div className="flex items-center ml-auto">
+            <p className="text-white">{AuthInfo.name ? AuthInfo.name : ""}</p>
             <button
               type="button"
               className={`text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800`}
