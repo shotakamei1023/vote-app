@@ -16,7 +16,7 @@ const Error = atom({
 });
 const ErrorMessage = atom("");
 
-const registerPage: NextPage = () => {
+const RegisterPage: NextPage = () => {
   const [isName, setName] = useAtom(nameAtom);
   const [isEmail, setEmail] = useAtom(emailAtom);
   const [isPassword, setPassword] = useAtom(passwordAtom);
@@ -218,4 +218,4 @@ const registerPage: NextPage = () => {
   );
 };
 
-export default registerPage;
+export default RegisterPage;

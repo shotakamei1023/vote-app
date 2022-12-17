@@ -1,4 +1,3 @@
-import { memo } from "react";
 import { useRouter } from "next/router";
 import { atom, useAtom } from "jotai";
 
@@ -9,7 +8,7 @@ import { useEffect } from "react";
 import { authInfo } from "../../pages/_app";
 const loadingAtom = atom(false);
 
-export const Header = memo(({ AuthInfo }: any) => {
+export const Header = ({ AuthInfo }: any) => {
   const router = useRouter();
   const path = router.pathname;
   const [isspMenu, setspMenu] = useAtom(spMenuAtom);
@@ -87,4 +86,4 @@ export const Header = memo(({ AuthInfo }: any) => {
       )}
     </header>
   );
-});
+};

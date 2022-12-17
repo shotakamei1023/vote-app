@@ -12,7 +12,7 @@ const emailAtom = atom("");
 const passwordAtom = atom("");
 const ErrorMessage = atom("");
 
-const loginPage = () => {
+const LoginPage = () => {
   const [isEmail, setEmail] = useAtom(emailAtom);
   const [isPassword, setPassword] = useAtom(passwordAtom);
   const [isErrorMessage, setErrorMessage] = useAtom(ErrorMessage);
@@ -136,4 +136,4 @@ const loginPage = () => {
   );
 };
 
-export default loginPage;
+export default LoginPage;
