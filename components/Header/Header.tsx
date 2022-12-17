@@ -3,11 +3,25 @@ import { useRouter } from "next/router";
 import { atom, useAtom } from "jotai";
 
 import { spMenuAtom } from "../../pages/admin/index";
+import { getAuth, signOut } from "firebase/auth";
 
 export const Header = memo(({ name }: any) => {
   const router = useRouter();
   const path = router.pathname;
   const [isspMenu, setspMenu] = useAtom(spMenuAtom);
+
+  const logOut = () => {
+    const auth = getAuth();
+    signOut(auth)
+      .then(() => {
+        // Sign-out successful.
+        console.log("ログアウトしました");
+        router.push("/auth/login");
+      })
+      .catch((error) => {
+        // An error happened.
+      });
+  };
 
   return (
     <header
@@ -19,14 +33,14 @@ export const Header = memo(({ name }: any) => {
         <div className="flex flex-wrap justify-between items-center">
           <a href="https://flowbite.com" className="flex items-center"></a>
           <div className="flex items-center lg:order-2">
-            <a
-              href="#"
-              className={`text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800 ${
-                name ? " opacity-100" : "opacity-0"
-              }`}
+            <p className="text-white">{name ? name : ""}</p>
+            <button
+              type="button"
+              className={`text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800`}
+              onClick={() => logOut()}
             >
-              {name ? name : "仮テキスト"}
-            </a>
+              ログアウト
+            </button>
             <button
               data-collapse-toggle="mobile-menu-2"
               type="button"
