@@ -2,29 +2,51 @@ import { async } from "@firebase/util";
 import { useBoxes } from "../hooks/useBoxes";
 import { doc, addDoc, getFirestore, collection } from "firebase/firestore";
 import Image from "next/image";
+import { User } from "../utils/firebase/users";
+import { authInfo } from "../pages/_app";
+import { atom, useAtom } from "jotai";
 
-export const BoxList = () => {
+const errorAtom = atom(false);
+
+export const BoxList = ({ user }: any) => {
   const { isLoading, boxes } = useBoxes();
+  const [isError, setError] = useAtom(errorAtom);
   if (isLoading) return <p>Loading...</p>;
 
   const vote = async (id: string) => {
     const db = getFirestore();
-    await addDoc(collection(db, "boxes", id, "votes"), {
-      box_id: id,
-      user_id: "vokSGoCLplaRDvmgtoT7WPRJx4X2",
-    });
+    if (user.vote) {
+      console.log("一回だけだよ");
+      setError(true);
+    } else {
+      await addDoc(collection(db, "boxes", id, "votes"), {
+        box_id: id,
+        user_id: user.id,
+      });
+    }
   };
 
   return (
-    <section className="bg-white dark:bg-gray-900 w-full h-screen col-[1_/_span_2]">
+    <section className="bg-white dark:bg-gray-900 w-full md:h-screen col-[1_/_span_2]">
       <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6 ">
         <div className="mx-auto max-w-screen-sm text-center mb-8 lg:mb-16">
           <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
             投票をお願いします。
           </h2>
-          <p className="font-light text-gray-500 lg:mb-16 sm:text-xl dark:text-gray-400">
+          <p className="font-light text-gray-500 sm:text-xl dark:text-gray-400">
             1アカウント1票までの投票になりますので注意ください。
           </p>
+          {isError ? (
+            <div
+              className="p-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800"
+              role="alert"
+            >
+              <span className="font-medium">【注意】</span>
+              既にあなたは投票を完了しています。
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
         <ul className="grid gap-8 mb-6 lg:mb-16 md:grid-cols-2">
           {boxes.map((box: any, index: number) => {

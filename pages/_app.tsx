@@ -4,16 +4,25 @@ import { Layout } from "../components/leyout";
 import { Header } from "../components/Header/Header";
 import "../utils/firebase/init";
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc, getFirestore } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  getFirestore,
+  collectionGroup,
+  query,
+  getDocs,
+} from "firebase/firestore";
 import { useEffect } from "react";
 import { atom, useAtom } from "jotai";
 import { useRouter } from "next/router";
 import { User } from "../utils/firebase/users";
 
-const authInfo = atom<User>({
+export const authInfo = atom<User>({
+  id: "",
   auth_id: "",
   name: "",
-  role: "",
+  role: 0,
+  vote: false,
 });
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -30,10 +39,27 @@ export default function App({ Component, pageProps }: AppProps) {
         const docRef = doc(db, "users", uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.data()) {
+          let voteSnap = await getDocs(query(collectionGroup(db, "votes")));
+          console.log(voteSnap);
+
+          const vote_user_ids = voteSnap.docs.map(
+            (item: any, index: number) => {
+              return item.data().user_id;
+            }
+          );
+
+          console.log(vote_user_ids);
+
+          console.log(vote_user_ids.includes(uid));
+
+          console.log(uid);
+
           setAuthInfo({
+            id: uid,
             auth_id: docSnap.data()?.auth_id,
             name: docSnap.data()?.name,
             role: docSnap.data()?.role,
+            vote: vote_user_ids.includes(uid),
           });
           if (path != "/admin") {
           } else {
@@ -78,7 +104,7 @@ export default function App({ Component, pageProps }: AppProps) {
               : "md:grid grid-cols-adminLeyout grid-rows-adminLeyout"
           } min-h-screen`}
         >
-          <Header AuthInfo={isAuthInfo} />
+          <Header />
           <Component {...pageProps} />
         </div>
       </Layout>
