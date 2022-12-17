@@ -51,10 +51,30 @@ export default function App({ Component, pageProps }: AppProps) {
       }
     });
   }, []);
-  return (
+  return path.indexOf("/auth") != -1 ? (
     <>
       <Layout>
-        <div className="md:grid grid-cols-adminLeyout grid-rows-adminLeyout min-h-screen">
+        <div
+          className={`${
+            path != "/admin"
+              ? ""
+              : "md:grid grid-cols-adminLeyout grid-rows-adminLeyout"
+          } min-h-screen`}
+        >
+          <Component {...pageProps} />
+        </div>
+      </Layout>
+    </>
+  ) : (
+    <>
+      <Layout>
+        <div
+          className={`${
+            path != "/admin"
+              ? ""
+              : "md:grid grid-cols-adminLeyout grid-rows-adminLeyout"
+          } min-h-screen`}
+        >
           <Header name={isAuthInfo.name} />
           <Component {...pageProps} />
         </div>
