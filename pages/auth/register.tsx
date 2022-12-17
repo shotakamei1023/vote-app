@@ -4,6 +4,7 @@ import { doc, setDoc, getFirestore, collection } from "firebase/firestore";
 import { atom, useAtom } from "jotai";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 const nameAtom = atom("");
 const emailAtom = atom("");
@@ -200,12 +201,13 @@ const registerPage: NextPage = () => {
                   {isErrorMessage ? changeMessage(isErrorMessage) : ""}
                 </p>
                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                  <a
-                    href="#"
-                    className="font-medium text-primary-600 hover:underline dark:text-primary-500"
+                  <Link
+                    href="/auth/login"
+                    className="font-medium text-primary-600 hover:underline
+                    dark:text-primary-500"
                   >
                     アカウント作成済みの方はこちら
-                  </a>
+                  </Link>
                 </p>
               </form>
             </div>
