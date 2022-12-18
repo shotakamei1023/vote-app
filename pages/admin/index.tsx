@@ -1,69 +1,49 @@
+import { NextPage } from "next";
 import { atom, useAtom } from "jotai";
 import { Sidebar } from "../../components/Admin/Sidebar";
 import { Main } from "../../components/Admin/Main";
-
-// 型
-type TabList = {
-  num: number;
-  display: boolean;
-};
-
-type Tab = {
-  overview: TabList;
-  boxes: TabList;
-};
+import { Tab } from "../../types";
 
 const tabAtom = atom<Tab>({
   overview: {
-    num: 0,
     display: true,
+    num: 0,
   },
   boxes: {
-    num: 0,
     display: false,
+    num: 0,
   },
 });
 
 //headerコンポーネントへ渡す
 export const spMenuAtom = atom(false);
 
-const AdminPage = () => {
+const AdminPage: NextPage = () => {
   const [isTab, setTabState] = useAtom(tabAtom);
   // 文字列キーと初期値を設定
   const [isspMenu, setspMenu] = useAtom(spMenuAtom);
 
-  const changeTab = (title: string, num: number) => {
+  const changeTab = (title: string, num: number): Tab | undefined => {
     if (title == "overview") {
       setTabState({
         overview: { display: true, num: num },
         boxes: { display: false, num: 0 },
       });
+      return;
     }
     if (title == "boxes") {
       setTabState({
         overview: { display: false, num: 0 },
         boxes: { display: true, num: num },
       });
+      return;
     }
-  };
-
-  const isExit = (target: any) => {
-    const value: any = Object.values(target);
-    if (value.indexOf(true) != -1) {
-      return true;
-    } else {
-      return false;
-    }
+    return;
   };
 
   return (
     <>
-      <Sidebar
-        isspMenu={isspMenu}
-        isTab={isTab}
-        isExit={isExit}
-        changeTab={changeTab}
-      />
+      <Sidebar isspMenu={isspMenu} isTab={isTab} changeTab={changeTab} />
       <Main isTab={isTab} />
     </>
   );

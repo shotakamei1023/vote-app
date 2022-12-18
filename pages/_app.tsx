@@ -15,14 +15,7 @@ import {
 import { useEffect } from "react";
 import { atom, useAtom } from "jotai";
 import { useRouter } from "next/router";
-
-type User = {
-  id: string;
-  auth_id: string;
-  name: string;
-  role?: 0;
-  vote?: boolean;
-};
+import { User } from "../types";
 
 export const authInfo = atom<User>({
   id: "",
@@ -53,11 +46,9 @@ export default function App({ Component, pageProps }: AppProps) {
         if (docSnap.data()) {
           //投票データ取得
           const voteSnap = await getDocs(query(collectionGroup(db, "votes")));
-          const vote_user_ids = voteSnap.docs.map(
-            (item: any, index: number) => {
-              return item.data().user_id;
-            }
-          );
+          const vote_user_ids = voteSnap.docs.map((item, index: number) => {
+            return item.data().user_id;
+          });
           //ユーザー情報格納
           setAuthInfo({
             id: uid,
@@ -104,7 +95,7 @@ export default function App({ Component, pageProps }: AppProps) {
             path != "/admin"
               ? ""
               : "md:grid grid-cols-adminLeyout grid-rows-adminLeyout"
-          } min-h-screen`}
+          }`}
         >
           <Component {...pageProps} />
         </div>

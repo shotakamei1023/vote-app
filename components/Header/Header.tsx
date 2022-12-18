@@ -9,7 +9,7 @@ import { authInfo } from "../../pages/_app";
 
 const loadingAtom = atom(false);
 
-export const Header = ({ AuthInfo }: any) => {
+export const Header = () => {
   const router = useRouter();
   const path = router.pathname;
   const [isspMenu, setspMenu] = useAtom(spMenuAtom);
@@ -46,7 +46,7 @@ export const Header = ({ AuthInfo }: any) => {
       }`}
     >
       {isLoading ? (
-        <nav className="border-gray-200 py-4 bg-white dark:bg-gray-800">
+        <nav className="border-gray-200 py-4 bg-white dark:bg-gray-800 md:px-4">
           <div className="flex flex-wrap justify-between items-center max-w-screen-2xl mx-auto">
             {isAuthInfo.role == 0 ? (
               path != "/admin" ? (

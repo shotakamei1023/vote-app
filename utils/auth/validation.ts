@@ -1,18 +1,28 @@
+import { Error } from "../../types";
+
 // バリデーションロジック
 //メールアドレスの正規表現
 const regex = new RegExp(
   /^[a-zA-Z0-9_.+-]+@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.)+[a-zA-Z]{2,}$/
 );
-export const chackEmail = (value: string, isError: any, setError: any) => {
+export const chackEmail = (
+  value: string,
+  isError: Error,
+  setError: ({ email, password }: Error) => void
+) => {
   //判定
   setError({
     email: !regex.test(value),
-    password: false,
+    password: isError.password,
   });
   return !regex.test(value);
 };
 
-export const chackPassword = (value: string, isError: any, setError: any) => {
+export const chackPassword = (
+  value: string,
+  isError: Error,
+  setError: ({ email, password }: Error) => void
+) => {
   if (value.length < 6) {
     setError({
       email: isError.email,

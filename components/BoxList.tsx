@@ -2,13 +2,19 @@ import { useBoxes } from "../hooks/useBoxes";
 import { addDoc, getFirestore, collection } from "firebase/firestore";
 import { atom, useAtom } from "jotai";
 import { useEffect } from "react";
+import { User, Box } from "../types";
 
 const messageAtom = atom({
   success: false,
   error: false,
 });
 
-export const BoxList = ({ user }: any) => {
+type Props = {
+  user: User;
+};
+
+export const BoxList = ({ user }: Props) => {
+  console.log(user);
   const { isLoading, boxes } = useBoxes();
   const [isMessage, setMessage] = useAtom(messageAtom);
 
@@ -67,7 +73,7 @@ export const BoxList = ({ user }: any) => {
           )}
         </div>
         <ul className="grid gap-8 mb-6 lg:mb-16 md:grid-cols-2">
-          {boxes.map((box: any, index: number) => {
+          {boxes.map((box: Box, index: number) => {
             return (
               <li key={index}>
                 <div className="items-center bg-gray-50 rounded-lg shadow sm:flex dark:bg-gray-800 dark:border-gray-700">

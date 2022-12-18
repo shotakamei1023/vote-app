@@ -1,6 +1,7 @@
 import { useEffect } from "react";
-import { Box, getBoxes } from "../utils/firebase/boxes";
+import { getBoxes } from "../utils/firebase/boxes";
 import { atom, useAtom } from "jotai";
+import { Box } from "../types";
 
 const DEFAULT_OUTPUT = atom<UseBoxesOutput>({
   isLoading: true,

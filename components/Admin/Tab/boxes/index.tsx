@@ -19,10 +19,17 @@ ChartJS.register(
   Legend
 );
 
-export const BoxesAside = ({ num, boxes }: any) => {
+import { Box } from "../../../../types";
+
+type Props = {
+  num: number;
+  boxes: Box[];
+};
+
+export const BoxesAside = ({ num, boxes }: Props) => {
   //データ整理
-  const labels = boxes.map((item: any) => item.name);
-  const values = boxes.map((item: any) => Number(item.count));
+  const labels = boxes.map((item) => item.name);
+  const values = boxes.map((item) => Number(item.count));
 
   const graphData = {
     labels: labels,
@@ -49,10 +56,10 @@ export const BoxesAside = ({ num, boxes }: any) => {
 
   if (num == 0) {
     return (
-      <section className="bg-white dark:bg-gray-900">
+      <aside className="bg-white dark:bg-gray-900">
         <div className="max-w-screen-xl px-4 py-8 mx-auto text-center lg:py-16 lg:px-6">
           <dl className="grid max-w-screen-md gap-8 mx-auto text-gray-900 sm:grid-cols-2 dark:text-white">
-            {boxes.map((item: any, index: number) => {
+            {boxes.map((item, index: number) => {
               return (
                 <div
                   className="flex flex-col items-center justify-center"
@@ -69,12 +76,12 @@ export const BoxesAside = ({ num, boxes }: any) => {
             })}
           </dl>
         </div>
-      </section>
+      </aside>
     );
   }
   if (num == 1) {
     return (
-      <div className="mx-auto mt-8">
+      <aside className="mx-auto bg-white min-h-screen pt-8">
         <Bar
           height={100}
           width={200}
@@ -82,7 +89,7 @@ export const BoxesAside = ({ num, boxes }: any) => {
           options={options}
           id="chart-key"
         />
-      </div>
+      </aside>
     );
   } else {
     return <></>;
