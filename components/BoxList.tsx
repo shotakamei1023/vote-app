@@ -10,7 +10,7 @@ const messageAtom = atom({
 export const BoxList = ({ user }: any) => {
   const { isLoading, boxes } = useBoxes();
   const [isMessage, setMessage] = useAtom(messageAtom);
-  if (isLoading) return <p>読み込み中です</p>;
+  if (isLoading) return <p>投票データ読み込み中です</p>;
 
   //投票ロジック
   const vote = async (id: string) => {
