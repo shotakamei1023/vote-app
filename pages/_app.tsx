@@ -37,7 +37,7 @@ export default function App({ Component, pageProps }: AppProps) {
   //ユーザー情報取得
   useEffect(() => {
     setLoading(true);
-    onAuthStateChanged(auth, async (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       //認証確認
       if (user) {
         const uid = user.uid;
@@ -76,6 +76,7 @@ export default function App({ Component, pageProps }: AppProps) {
         setLoading(false);
       }
     });
+    unsubscribe();
   }, []);
 
   if (isLoading) {
