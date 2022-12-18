@@ -4,6 +4,7 @@ import { atom, useAtom } from "jotai";
 import { useLayoutEffect } from "react";
 import { User, Box } from "../types";
 import Link from "next/link";
+import { Loading } from "./Lading";
 
 const messageAtom = atom({
   success: false,
@@ -59,7 +60,7 @@ export const BoxList = ({ user }: Props) => {
     }
   };
 
-  if (isLoading) return <p>投票データ読み込み中です</p>;
+  if (isLoading) return <Loading />;
   return (
     <section className="bg-white dark:bg-gray-900 w-full col-[1_/_span_2]">
       <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6 ">

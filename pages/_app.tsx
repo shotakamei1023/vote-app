@@ -12,10 +12,11 @@ import {
   query,
   getDocs,
 } from "firebase/firestore";
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 import { atom, useAtom } from "jotai";
 import { useRouter } from "next/router";
 import { User } from "../types";
+import { Loading } from "../components/Lading";
 
 export const authInfo = atom<User>({
   id: "",
@@ -35,7 +36,7 @@ export default function App({ Component, pageProps }: AppProps) {
   const [isLoading, setLoading] = useAtom(loadingAtom);
 
   //ユーザー情報取得
-  useEffect(() => {
+  useLayoutEffect(() => {
     setLoading(true);
     onAuthStateChanged(auth, async (user) => {
       //認証確認
@@ -73,17 +74,21 @@ export default function App({ Component, pageProps }: AppProps) {
       }
       // ユーザー情報がない時auth周りのページを見えないようにする
       else {
-        setLoading(false);
         if (path == "/admin") {
           router.push("/auth/register/");
         } else {
         }
+        setLoading(false);
       }
     });
   }, []);
 
   if (isLoading) {
-    return <p>ユーザーデータ読み込み中です</p>;
+    return (
+      <>
+        <Loading />
+      </>
+    );
   }
 
   return path.indexOf("/auth") != -1 ? (
