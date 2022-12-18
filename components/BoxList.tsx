@@ -6,22 +6,32 @@ import { User } from "../utils/firebase/users";
 import { authInfo } from "../pages/_app";
 import { atom, useAtom } from "jotai";
 
-const errorAtom = atom(false);
+const messageAtom = atom({
+  success: false,
+  error: false,
+});
 
 export const BoxList = ({ user }: any) => {
   const { isLoading, boxes } = useBoxes();
-  const [isError, setError] = useAtom(errorAtom);
+  const [isMessage, setMessage] = useAtom(messageAtom);
   if (isLoading) return <p>Loading...</p>;
 
   const vote = async (id: string) => {
     const db = getFirestore();
-    if (user.vote) {
+    if (user.vote || isMessage.success) {
       console.log("一回だけだよ");
-      setError(true);
+      setMessage({
+        success: isMessage.success,
+        error: true,
+      });
     } else {
       await addDoc(collection(db, "boxes", id, "votes"), {
         box_id: id,
         user_id: user.id,
+      });
+      setMessage({
+        success: true,
+        error: isMessage.error,
       });
     }
   };
@@ -36,13 +46,20 @@ export const BoxList = ({ user }: any) => {
           <p className="font-light text-gray-500 sm:text-xl dark:text-gray-400">
             1アカウント1票までの投票になりますので注意ください。
           </p>
-          {isError ? (
+          {isMessage.error ? (
             <div
               className="p-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800"
               role="alert"
             >
               <span className="font-medium">【注意】</span>
               既にあなたは投票を完了しています。
+            </div>
+          ) : isMessage.success ? (
+            <div
+              className="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+              role="alert"
+            >
+              <span className="font-medium">【成功】</span> 投票が完了しました。
             </div>
           ) : (
             <></>
@@ -64,7 +81,7 @@ export const BoxList = ({ user }: any) => {
                   </div>
                   <div className="p-5">
                     <h3 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
-                      <a href="#">{box.name}さん</a>
+                      {box.name}さん
                     </h3>
                     <span className="text-gray-500 dark:text-gray-400">
                       Marketing & Sale
