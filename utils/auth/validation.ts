@@ -5,7 +5,7 @@ import { Error } from "../../types";
 const regex = new RegExp(
   /^[a-zA-Z0-9_.+-]+@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.)+[a-zA-Z]{2,}$/
 );
-export const chackEmail = (
+export const checkEmail = (
   value: string,
   isError: Error,
   setError: ({ email, password }: Error) => void
@@ -18,7 +18,7 @@ export const chackEmail = (
   return !regex.test(value);
 };
 
-export const chackPassword = (
+export const checkPassword = (
   value: string,
   isError: Error,
   setError: ({ email, password }: Error) => void

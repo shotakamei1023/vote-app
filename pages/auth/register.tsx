@@ -6,8 +6,8 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, getFirestore } from "firebase/firestore";
 
 import {
-  chackEmail,
-  chackPassword,
+  checkEmail,
+  checkPassword,
   changeMessage,
 } from "../../utils/auth/validation";
 
@@ -103,7 +103,7 @@ export const RegisterPage: NextPage = () => {
                     required
                     onChange={(event) => {
                       setEmail(event.target.value);
-                      chackEmail(event.target.value, isError, setError);
+                      checkEmail(event.target.value, isError, setError);
                     }}
                   />
                   {isError.email && isEmail ? (
@@ -132,7 +132,7 @@ export const RegisterPage: NextPage = () => {
                     required
                     onChange={(event) => {
                       setPassword(event.target.value);
-                      chackPassword(event.target.value, isError, setError);
+                      checkPassword(event.target.value, isError, setError);
                     }}
                   />
                   {isError.password && isPassword ? (
