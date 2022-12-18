@@ -47,6 +47,9 @@ export const changeMessage = (value: string) => {
   }
   if (value == "Firebase: Error (auth/wrong-password).") {
     return "メールアドレスまたはパスワードが違います";
+  }
+  if (value == "Firebase: Error (auth/user-not-found).") {
+    return "メールアドレスまたはパスワードが違います";
   } else {
     return value;
   }

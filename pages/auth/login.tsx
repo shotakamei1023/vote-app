@@ -117,8 +117,7 @@ const LoginPage: NextPage = () => {
                     isEmail &&
                     isPassword &&
                     isError.email == false &&
-                    isError.password == false &&
-                    isErrorMessage == ""
+                    isError.password == false
                       ? "pointer-events-auto bg-primary-600 hover:bg-primary-700 dark:bg-primary-600 dark:hover:bg-primary-700"
                       : "pointer-events-none dark:bg-primary-900"
                   }`}
@@ -129,8 +128,7 @@ const LoginPage: NextPage = () => {
                       isEmail &&
                       isPassword &&
                       isError.email == false &&
-                      isError.password == false &&
-                      isErrorMessage == ""
+                      isError.password == false
                         ? "opacity-100"
                         : "opacity-40"
                     }`}

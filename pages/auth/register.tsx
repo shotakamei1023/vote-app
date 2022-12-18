@@ -49,7 +49,10 @@ export const RegisterPage: NextPage = () => {
         setcreate(false);
       })
       .then(() => {
-        router.push("/");
+        router.push({
+          pathname: "/", //URL
+          query: { register: "success" }, //検索クエリ
+        });
       })
       .catch((error) => {
         const errorMessage = error.message;

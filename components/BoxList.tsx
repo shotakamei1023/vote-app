@@ -5,11 +5,13 @@ import { useLayoutEffect } from "react";
 import { User, Box } from "../types";
 import Link from "next/link";
 import { Loading } from "./Lading";
+import { useRouter } from "next/router";
 
 const messageAtom = atom({
   success: false,
   error: false,
   warning: false,
+  register: false,
 });
 
 type Props = {
@@ -19,13 +21,26 @@ type Props = {
 export const BoxList = ({ user }: Props) => {
   const { isLoading, boxes } = useBoxes();
   const [isMessage, setMessage] = useAtom(messageAtom);
+  const pathParam = useRouter().query.register;
+
+  console.log(pathParam);
 
   useLayoutEffect(() => {
+    //登録成功時アラート表示
+    const registerFlug = (): boolean => {
+      if (pathParam == "success") {
+        return true;
+      } else {
+        return false;
+      }
+    };
+
     //エラーメッセージ初期化
     setMessage({
       success: false,
       error: false,
       warning: false,
+      register: registerFlug(),
     });
   }, []);
 
@@ -39,6 +54,7 @@ export const BoxList = ({ user }: Props) => {
           success: isMessage.success,
           error: true,
           warning: isMessage.warning,
+          register: isMessage.register,
         });
       } else {
         await addDoc(collection(db, "boxes", id, "votes"), {
@@ -49,6 +65,7 @@ export const BoxList = ({ user }: Props) => {
           success: true,
           error: isMessage.error,
           warning: isMessage.warning,
+          register: isMessage.register,
         });
       }
     } else {
@@ -56,6 +73,7 @@ export const BoxList = ({ user }: Props) => {
         success: isMessage.success,
         error: isMessage.error,
         warning: true,
+        register: isMessage.register,
       });
     }
   };
@@ -66,10 +84,10 @@ export const BoxList = ({ user }: Props) => {
       <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6 ">
         <div className="mx-auto max-w-screen-sm text-center mb-8 lg:mb-16">
           <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
-            投票をお願いします。
+            好きな顔へ清き1票を
           </h2>
           <p className="font-light text-gray-500 sm:text-xl dark:text-gray-400">
-            1アカウント1票までの投票になりますので注意ください。
+            1アカウント1票までの投票になりますのでご注意ください。
           </p>
           {isMessage.error ? (
             <div
@@ -101,6 +119,16 @@ export const BoxList = ({ user }: Props) => {
               >
                 こちらより作成ください
               </Link>
+            </>
+          ) : isMessage.register ? (
+            <>
+              <div
+                className="p-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+                role="alert"
+              >
+                <span className="font-medium">【成功】</span>
+                会員登録が完了しました。
+              </div>
             </>
           ) : (
             <></>
