@@ -1,9 +1,5 @@
-import { async } from "@firebase/util";
 import { useBoxes } from "../hooks/useBoxes";
-import { doc, addDoc, getFirestore, collection } from "firebase/firestore";
-
-import { User } from "../utils/firebase/users";
-import { authInfo } from "../pages/_app";
+import { addDoc, getFirestore, collection } from "firebase/firestore";
 import { atom, useAtom } from "jotai";
 
 const messageAtom = atom({
@@ -14,12 +10,14 @@ const messageAtom = atom({
 export const BoxList = ({ user }: any) => {
   const { isLoading, boxes } = useBoxes();
   const [isMessage, setMessage] = useAtom(messageAtom);
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <p>読み込み中です</p>;
 
+  //投票ロジック
   const vote = async (id: string) => {
     const db = getFirestore();
+
+    //1度しか投票できないようにする
     if (user.vote || isMessage.success) {
-      console.log("一回だけだよ");
       setMessage({
         success: isMessage.success,
         error: true,
