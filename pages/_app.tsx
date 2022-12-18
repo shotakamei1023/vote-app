@@ -3,7 +3,7 @@ import type { AppProps } from "next/app";
 import { Layout } from "../components/leyout";
 import { Header } from "../components/Header/Header";
 import "../utils/firebase/init";
-import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import {
   doc,
   getDoc,
@@ -25,28 +25,33 @@ export const authInfo = atom<User>({
   vote: false,
 });
 
+const loadingAtom = atom(true);
+
 export default function App({ Component, pageProps }: AppProps) {
   const auth = getAuth();
   const router = useRouter();
   const path = router.pathname;
   const [isAuthInfo, setAuthInfo] = useAtom(authInfo);
+  const [isLoading, setLoading] = useAtom(loadingAtom);
+
+  //ユーザー情報取得
   useEffect(() => {
+    setLoading(true);
     onAuthStateChanged(auth, async (user) => {
       //認証確認
       if (user) {
         const uid = user.uid;
         const db = getFirestore();
-        const docRef = doc(db, "users", uid);
-        const docSnap = await getDoc(docRef);
+        const docSnap = await getDoc(doc(db, "users", uid));
         if (docSnap.data()) {
-          let voteSnap = await getDocs(query(collectionGroup(db, "votes")));
-          console.log(voteSnap);
-
+          //投票データ取得
+          const voteSnap = await getDocs(query(collectionGroup(db, "votes")));
           const vote_user_ids = voteSnap.docs.map(
             (item: any, index: number) => {
               return item.data().user_id;
             }
           );
+          //ユーザー情報格納
           setAuthInfo({
             id: uid,
             auth_id: docSnap.data()?.auth_id,
@@ -61,15 +66,17 @@ export default function App({ Component, pageProps }: AppProps) {
             }
           }
         }
-        //ログイン画面に入れないようにする
+        //auth周りのページを見えないようにする
         if (path.indexOf("/auth") != -1) {
           router.push("/");
         } else {
         }
-      } else {
-        // User is signed out
-        // ...
-        console.log("サインアウト");
+        setLoading(false);
+      }
+      // ユーザー情報がない時
+      else {
+        setLoading(false);
+        //auth周りのページしかアクセスできないようにする
         if (path.indexOf("/auth") != -1) {
         } else {
           router.push("/auth/register");
@@ -77,6 +84,11 @@ export default function App({ Component, pageProps }: AppProps) {
       }
     });
   }, []);
+
+  if (isLoading) {
+    return <p>ユーザーデータ読み込み中です</p>;
+  }
+
   return path.indexOf("/auth") != -1 ? (
     <>
       <Layout>
