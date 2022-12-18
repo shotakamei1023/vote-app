@@ -2,6 +2,7 @@ import { useBoxes } from "../../hooks/useBoxes";
 import { OverviewAside } from "./Tab/overview";
 import { BoxesAside } from "./Tab/boxes";
 import { Tab } from "../../types";
+import { Loading } from "../Lading";
 
 type Props = {
   isTab: Tab;
@@ -9,7 +10,7 @@ type Props = {
 
 export const Main = ({ isTab }: Props) => {
   const { isLoading, boxes } = useBoxes();
-  if (isLoading) return <p className=" text-white">Loading...</p>;
+  if (isLoading) return <Loading />;
   return (
     <>
       <main className="row-[2] col-[2]">
