@@ -47,13 +47,6 @@ export default function App({ Component, pageProps }: AppProps) {
               return item.data().user_id;
             }
           );
-
-          console.log(vote_user_ids);
-
-          console.log(vote_user_ids.includes(uid));
-
-          console.log(uid);
-
           setAuthInfo({
             id: uid,
             auth_id: docSnap.data()?.auth_id,
@@ -68,7 +61,11 @@ export default function App({ Component, pageProps }: AppProps) {
             }
           }
         }
-        // ...
+        //ログイン画面に入れないようにする
+        if (path.indexOf("/auth") != -1) {
+          router.push("/");
+        } else {
+        }
       } else {
         // User is signed out
         // ...
