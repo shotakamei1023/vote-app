@@ -1,12 +1,14 @@
 import { useBoxes } from "../hooks/useBoxes";
 import { addDoc, getFirestore, collection } from "firebase/firestore";
 import { atom, useAtom } from "jotai";
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 import { User, Box } from "../types";
+import Link from "next/link";
 
 const messageAtom = atom({
   success: false,
   error: false,
+  warning: false,
 });
 
 type Props = {
@@ -14,33 +16,49 @@ type Props = {
 };
 
 export const BoxList = ({ user }: Props) => {
-  console.log(user);
   const { isLoading, boxes } = useBoxes();
   const [isMessage, setMessage] = useAtom(messageAtom);
 
+  useLayoutEffect(() => {
+    //エラーメッセージ初期化
+    setMessage({
+      success: false,
+      error: false,
+      warning: false,
+    });
+  }, []);
+
   //投票ロジック
   const vote = async (id: string) => {
-    const db = getFirestore();
-
-    //1度しか投票できないようにする
-    if (user.vote || isMessage.success) {
+    console.log(user);
+    if (user.auth_id) {
+      const db = getFirestore();
+      //1度しか投票できないようにする
+      if (user.vote || isMessage.success) {
+        setMessage({
+          success: isMessage.success,
+          error: true,
+          warning: isMessage.warning,
+        });
+      } else {
+        await addDoc(collection(db, "boxes", id, "votes"), {
+          box_id: id,
+          user_id: user.id,
+        });
+        setMessage({
+          success: true,
+          error: isMessage.error,
+          warning: isMessage.warning,
+        });
+      }
+    } else {
       setMessage({
         success: isMessage.success,
-        error: true,
-      });
-    } else {
-      await addDoc(collection(db, "boxes", id, "votes"), {
-        box_id: id,
-        user_id: user.id,
-      });
-      setMessage({
-        success: true,
         error: isMessage.error,
+        warning: true,
       });
     }
   };
-
-  useEffect(() => {}, []);
 
   if (isLoading) return <p>投票データ読み込み中です</p>;
   return (
@@ -55,19 +73,35 @@ export const BoxList = ({ user }: Props) => {
           </p>
           {isMessage.error ? (
             <div
-              className="p-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800"
+              className="p-4 text-sm text-blue-700 bg-blue-100 rounded-lg dark:bg-blue-200 dark:text-blue-800"
               role="alert"
             >
-              <span className="font-medium">【注意】</span>
+              <span className="font-medium">【お知らせ】</span>
               既にあなたは投票を完了しています。
             </div>
           ) : isMessage.success ? (
             <div
-              className="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+              className="p-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
               role="alert"
             >
-              <span className="font-medium">【成功】</span> 投票が完了しました。
+              <span className="font-medium">【成功】</span>投票が完了しました。
             </div>
+          ) : isMessage.warning ? (
+            <>
+              <div
+                className="p-4 text-sm text-yellow-700 bg-yellow-100 rounded-lg dark:bg-yellow-200 dark:text-yellow-800"
+                role="alert"
+              >
+                <span className="font-medium">【注意】</span>
+                投票にはアカウントの作成が必要です
+              </div>
+              <Link
+                href="auth/register"
+                className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+              >
+                こちらより作成ください
+              </Link>
+            </>
           ) : (
             <></>
           )}
