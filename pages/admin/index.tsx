@@ -28,7 +28,7 @@ const tabAtom = atom<Tab>({
 //headerコンポーネントへ渡す
 export const spMenuAtom = atom(false);
 
-const adminPage = () => {
+const AdminPage = () => {
   const [isTab, setTabState] = useAtom(tabAtom);
   // 文字列キーと初期値を設定
   const [isspMenu, setspMenu] = useAtom(spMenuAtom);
@@ -78,4 +78,4 @@ const adminPage = () => {
   );
 };
 
-export default adminPage;
+export default AdminPage;

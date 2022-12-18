@@ -1,7 +1,7 @@
 import { async } from "@firebase/util";
 import { useBoxes } from "../hooks/useBoxes";
 import { doc, addDoc, getFirestore, collection } from "firebase/firestore";
-import Image from "next/image";
+
 import { User } from "../utils/firebase/users";
 import { authInfo } from "../pages/_app";
 import { atom, useAtom } from "jotai";
@@ -53,17 +53,15 @@ export const BoxList = ({ user }: any) => {
             return (
               <li key={index}>
                 <div className="items-center bg-gray-50 rounded-lg shadow sm:flex dark:bg-gray-800 dark:border-gray-700">
-                  <a href="#" className=" w-full max-w-[200px]">
-                    <Image
+                  <div>
+                    <img
                       src={
                         "https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/sofia-mcguire.png"
                       }
                       alt="プロフィール写真"
                       className="w-full rounded-lg sm:rounded-none sm:rounded-l-lg"
-                      width={300}
-                      height={300}
                     />
-                  </a>
+                  </div>
                   <div className="p-5">
                     <h3 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
                       <a href="#">{box.name}さん</a>
