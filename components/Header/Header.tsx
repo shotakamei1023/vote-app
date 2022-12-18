@@ -6,6 +6,7 @@ import { getAuth, signOut } from "firebase/auth";
 import Link from "next/link";
 import { useEffect } from "react";
 import { authInfo } from "../../pages/_app";
+
 const loadingAtom = atom(false);
 
 export const Header = ({ AuthInfo }: any) => {
@@ -48,12 +49,21 @@ export const Header = ({ AuthInfo }: any) => {
         <nav className="border-gray-200 py-4 bg-white dark:bg-gray-800">
           <div className="flex flex-wrap justify-between items-center max-w-screen-2xl mx-auto">
             {isAuthInfo.role == 0 ? (
-              <Link
-                href="/admin"
-                className={`text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2 text-center dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800 `}
-              >
-                管理画面はこちら
-              </Link>
+              path != "/admin" ? (
+                <Link
+                  href="/admin"
+                  className={`text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2 text-center dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800 `}
+                >
+                  管理画面
+                </Link>
+              ) : (
+                <Link
+                  href="/"
+                  className={`text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2 text-center dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800 `}
+                >
+                  投票画面
+                </Link>
+              )
             ) : (
               ""
             )}

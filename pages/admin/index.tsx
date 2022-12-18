@@ -1,28 +1,27 @@
-import "../../utils/firebase/init";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { atom, useAtom } from "jotai";
-import { atomWithStorage } from "jotai/utils";
-import { Header } from "../../components/Header/Header";
 import { Sidebar } from "../../components/Admin/Sidebar";
 import { Main } from "../../components/Admin/Main";
 
-type overview = {
-  0: boolean;
-};
-
-type boxes = {
-  0: boolean;
-  1: boolean;
+// 型
+type TabList = {
+  num: number;
+  display: boolean;
 };
 
 type Tab = {
-  overview: overview;
-  boxes: boxes;
+  overview: TabList;
+  boxes: TabList;
 };
 
 const tabAtom = atom<Tab>({
-  overview: { 0: true },
-  boxes: { 0: false, 1: false },
+  overview: {
+    num: 0,
+    display: true,
+  },
+  boxes: {
+    num: 0,
+    display: false,
+  },
 });
 
 //headerコンポーネントへ渡す
@@ -36,23 +35,15 @@ const AdminPage = () => {
   const changeTab = (title: string, num: number) => {
     if (title == "overview") {
       setTabState({
-        overview: { 0: true },
-        boxes: { 0: false, 1: false },
+        overview: { display: true, num: num },
+        boxes: { display: false, num: 0 },
       });
     }
     if (title == "boxes") {
-      if (num == 0) {
-        setTabState({
-          overview: { 0: false },
-          boxes: { 0: true, 1: false },
-        });
-      }
-      if (num == 1) {
-        setTabState({
-          overview: { 0: false },
-          boxes: { 0: false, 1: true },
-        });
-      }
+      setTabState({
+        overview: { display: false, num: 0 },
+        boxes: { display: true, num: num },
+      });
     }
   };
 

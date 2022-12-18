@@ -1,6 +1,7 @@
 import { useBoxes } from "../hooks/useBoxes";
 import { addDoc, getFirestore, collection } from "firebase/firestore";
 import { atom, useAtom } from "jotai";
+import { useEffect } from "react";
 
 const messageAtom = atom({
   success: false,
@@ -10,7 +11,6 @@ const messageAtom = atom({
 export const BoxList = ({ user }: any) => {
   const { isLoading, boxes } = useBoxes();
   const [isMessage, setMessage] = useAtom(messageAtom);
-  if (isLoading) return <p>投票データ読み込み中です</p>;
 
   //投票ロジック
   const vote = async (id: string) => {
@@ -34,6 +34,9 @@ export const BoxList = ({ user }: any) => {
     }
   };
 
+  useEffect(() => {}, []);
+
+  if (isLoading) return <p>投票データ読み込み中です</p>;
   return (
     <section className="bg-white dark:bg-gray-900 w-full col-[1_/_span_2]">
       <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6 ">

@@ -1,5 +1,3 @@
-import { Provider as JotaiProvider, atom, useAtom } from "jotai";
-
 export const Sidebar = ({ isspMenu, isTab, isExit, changeTab }: any) => {
   return (
     <>
