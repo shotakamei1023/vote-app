@@ -57,7 +57,7 @@ export default function App({ Component, pageProps }: AppProps) {
             role: docSnap.data()?.role,
             vote: vote_user_ids.includes(uid),
           });
-          if (path != "/admin") {
+          if (path != "/admin/") {
           } else {
             if (docSnap.data()?.role != 0) {
               router.push("/");
@@ -65,15 +65,19 @@ export default function App({ Component, pageProps }: AppProps) {
           }
         }
         //auth周りのページを見えないようにする
-        if (path.indexOf("/auth") != -1) {
+        if (path.indexOf("/auth/") != -1) {
           router.push("/");
         } else {
         }
         setLoading(false);
       }
-      // ユーザー情報がない時
+      // ユーザー情報がない時auth周りのページを見えないようにする
       else {
         setLoading(false);
+        if (path != "/admin/") {
+          router.push("/auth/register/");
+        } else {
+        }
       }
     });
     unsubscribe();
