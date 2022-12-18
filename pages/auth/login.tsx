@@ -1,54 +1,45 @@
-import "../../utils/firebase/init";
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  GoogleAuthProvider,
-  signInWithRedirect,
-} from "firebase/auth";
-import { atom, useAtom } from "jotai";
+import { NextPage } from "next";
 import { useRouter } from "next/router";
+import Link from "next/link";
+import { atom, useAtom } from "jotai";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+
+import {
+  chackEmail,
+  chackPassword,
+  changeMessage,
+} from "../../utils/auth/validation";
 
 const emailAtom = atom("");
 const passwordAtom = atom("");
 const ErrorMessage = atom("");
+export const ErrorAtom = atom({
+  email: false,
+  password: false,
+});
 
-const LoginPage = () => {
+const LoginPage: NextPage = () => {
   const [isEmail, setEmail] = useAtom(emailAtom);
   const [isPassword, setPassword] = useAtom(passwordAtom);
   const [isErrorMessage, setErrorMessage] = useAtom(ErrorMessage);
+  const [isError, setError] = useAtom(ErrorAtom);
   const router = useRouter();
 
   const signin = () => {
     const auth = getAuth();
     signInWithEmailAndPassword(auth, isEmail, isPassword)
       .then((userCredential) => {
-        const user = userCredential.user;
-        console.log("成功");
-        console.log(user);
+        userCredential.user;
       })
-      // .then(() => {
-      //   const provider = new GoogleAuthProvider();
-      //   return signInWithRedirect(auth, provider);
-      // })
       .then(() => {
         router.push("/");
       })
       .catch((error) => {
-        const errorCode = error.code;
         const errorMessage = error.message;
-        console.log("失敗");
-        console.log(errorCode);
-        console.log(errorMessage);
         setErrorMessage(errorMessage);
       });
   };
-  const changeMessage = (value: string) => {
-    if (value == "Firebase: Error (auth/user-not-found).") {
-      return "アカウントが見つかりません";
-    } else {
-      return value;
-    }
-  };
+
   return (
     <>
       <section className="bg-gray-50 dark:bg-gray-900">
@@ -79,8 +70,18 @@ const LoginPage = () => {
                     required
                     onChange={(event) => {
                       setEmail(event.target.value);
+                      chackEmail(event.target.value, isError, setError);
                     }}
                   />
+                  {isError.email && isEmail ? (
+                    <p className="mt-2 text-sm text-red-600 dark:text-red-500">
+                      <span className="font-medium">
+                        username@example.comの形式で入力ください
+                      </span>
+                    </p>
+                  ) : (
+                    <></>
+                  )}
                 </div>
                 <div>
                   <label
@@ -98,17 +99,17 @@ const LoginPage = () => {
                     required
                     onChange={(event) => {
                       setPassword(event.target.value);
+                      chackPassword(event.target.value, isError, setError);
                     }}
                   />
+                  {isError.password && isPassword ? (
+                    <p className="mt-2 text-sm text-red-600 dark:text-red-500">
+                      <span className="font-medium">6文字以上入力ください</span>
+                    </p>
+                  ) : (
+                    <></>
+                  )}
                 </div>
-                {/* <div className="flex items-center justify-between">
-                  <a
-                    href="#"
-                    className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
-                  >
-                    パスワードを忘れた方
-                  </a>
-                </div> */}
                 <button
                   type="button"
                   className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
@@ -120,12 +121,12 @@ const LoginPage = () => {
                   {isErrorMessage ? changeMessage(isErrorMessage) : ""}
                 </p>
                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                  <a
-                    href="#"
+                  <Link
+                    href="/auth/register"
                     className="font-medium text-primary-600 hover:underline dark:text-primary-500"
                   >
                     アカウントの新規作成はこちら
-                  </a>
+                  </Link>
                 </p>
               </form>
             </div>
