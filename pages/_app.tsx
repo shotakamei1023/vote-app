@@ -74,11 +74,6 @@ export default function App({ Component, pageProps }: AppProps) {
       // ユーザー情報がない時
       else {
         setLoading(false);
-        //auth周りのページしかアクセスできないようにする
-        // if (path.indexOf("/auth") != -1) {
-        // } else {
-        //   router.push("/auth/register");
-        // }
       }
     });
   }, []);

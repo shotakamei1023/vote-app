@@ -20,18 +20,12 @@ export const Header = () => {
     const auth = getAuth();
     signOut(auth)
       .then(() => {
-        // Sign-out successful.
-        console.log("ログアウトしました");
         router.push("/auth/login");
       })
-      .catch((error) => {
-        // An error happened.
-      });
+      .catch((error) => {});
   };
 
   useEffect(() => {
-    console.log("ここ");
-    console.log(isAuthInfo);
     if (isAuthInfo.id) {
       return setLoading(true);
     } else {

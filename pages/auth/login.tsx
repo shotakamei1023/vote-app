@@ -5,8 +5,8 @@ import { atom, useAtom } from "jotai";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 import {
-  chackEmail,
-  chackPassword,
+  checkEmail,
+  checkPassword,
   changeMessage,
 } from "../../utils/auth/validation";
 
@@ -70,7 +70,7 @@ const LoginPage: NextPage = () => {
                     required
                     onChange={(event) => {
                       setEmail(event.target.value);
-                      chackEmail(event.target.value, isError, setError);
+                      checkEmail(event.target.value, isError, setError);
                     }}
                   />
                   {isError.email && isEmail ? (
@@ -99,7 +99,7 @@ const LoginPage: NextPage = () => {
                     required
                     onChange={(event) => {
                       setPassword(event.target.value);
-                      chackPassword(event.target.value, isError, setError);
+                      checkPassword(event.target.value, isError, setError);
                     }}
                   />
                   {isError.password && isPassword ? (

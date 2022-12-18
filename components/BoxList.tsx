@@ -30,7 +30,6 @@ export const BoxList = ({ user }: Props) => {
 
   //投票ロジック
   const vote = async (id: string) => {
-    console.log(user);
     if (user.auth_id) {
       const db = getFirestore();
       //1度しか投票できないようにする

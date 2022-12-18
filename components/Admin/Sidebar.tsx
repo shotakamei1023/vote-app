@@ -7,7 +7,6 @@ type Props = {
 };
 
 export const Sidebar = ({ isspMenu, isTab, changeTab }: Props) => {
-  console.log(changeTab);
   return (
     <>
       <aside
