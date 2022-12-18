@@ -15,7 +15,14 @@ import {
 import { useEffect } from "react";
 import { atom, useAtom } from "jotai";
 import { useRouter } from "next/router";
-import { User } from "../utils/firebase/users";
+
+type User = {
+  id: string;
+  auth_id: string;
+  name: string;
+  role?: 0;
+  vote?: boolean;
+};
 
 export const authInfo = atom<User>({
   id: "",
