@@ -10,10 +10,17 @@ import {
 const sumTurnoutAtom = atom(0);
 const usersCountAtom = atom(0);
 
-export const OverviewAside = ({ num, boxes }: any) => {
+import { Box } from "../../../../types";
+
+type Props = {
+  num: number;
+  boxes: Box[];
+};
+
+export const OverviewAside = ({ num, boxes }: Props) => {
   const [isSumTurnout, setSumTurnout] = useAtom(sumTurnoutAtom);
   const [isUsersCount, setUsersCount] = useAtom(usersCountAtom);
-  const values = boxes.map((item: any) => Number(item.count));
+  const values = boxes.map((item) => Number(item.count));
   //投票数
   const boxvotesCount: number = values.reduce(
     (sum: number, element: number) => {

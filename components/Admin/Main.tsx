@@ -1,10 +1,15 @@
 import { useBoxes } from "../../hooks/useBoxes";
 import { OverviewAside } from "./Tab/overview";
 import { BoxesAside } from "./Tab/boxes";
+import { Tab } from "../../types";
 
-export const Main = ({ isTab }: any) => {
+type Props = {
+  isTab: Tab;
+};
+
+export const Main = ({ isTab }: Props) => {
   const { isLoading, boxes } = useBoxes();
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <p className=" text-white">Loading...</p>;
   return (
     <>
       <main className="row-[2] col-[2]">

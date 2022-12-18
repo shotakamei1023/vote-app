@@ -1,4 +1,13 @@
-export const Sidebar = ({ isspMenu, isTab, isExit, changeTab }: any) => {
+import { Tab } from "../../types";
+
+type Props = {
+  isspMenu: boolean;
+  isTab: Tab;
+  changeTab: (title: string, num: number) => Tab | undefined;
+};
+
+export const Sidebar = ({ isspMenu, isTab, changeTab }: Props) => {
+  console.log(changeTab);
   return (
     <>
       <aside
@@ -11,7 +20,9 @@ export const Sidebar = ({ isspMenu, isTab, isExit, changeTab }: any) => {
               <button
                 type="button"
                 className={`flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group w-full ${
-                  isTab.overview[0] ? "bg-gray-700" : ""
+                  isTab.overview.display && isTab.overview.num == 0
+                    ? "bg-gray-700"
+                    : ""
                 }`}
                 onClick={() => changeTab("overview", 0)}
               >
@@ -32,7 +43,7 @@ export const Sidebar = ({ isspMenu, isTab, isExit, changeTab }: any) => {
               <button
                 type="button"
                 className={`flex items-center p-2 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 ${
-                  isExit(isTab.boxes) ? "bg-gray-700" : ""
+                  isTab.boxes.display ? "bg-gray-700" : ""
                 }`}
                 aria-controls="dropdown-pages"
                 data-collapse-toggle="dropdown-pages"
@@ -71,14 +82,16 @@ export const Sidebar = ({ isspMenu, isTab, isExit, changeTab }: any) => {
               <ul
                 id="dropdown-pages"
                 className={`py-2 space-y-2 ${
-                  isExit(isTab.boxes) ? "block" : "hidden"
+                  isTab.boxes.display ? "block" : "hidden"
                 }`}
               >
                 <li>
                   <button
                     type="button"
                     className={`flex items-center p-2 pl-11 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 ${
-                      isTab.boxes[0] ? "bg-gray-700" : ""
+                      isTab.boxes.display && isTab.boxes.num == 0
+                        ? "bg-gray-700"
+                        : ""
                     }`}
                     onClick={() => changeTab("boxes", 0)}
                   >
@@ -89,7 +102,9 @@ export const Sidebar = ({ isspMenu, isTab, isExit, changeTab }: any) => {
                   <button
                     type="button"
                     className={`flex items-center p-2 pl-11 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 ${
-                      isTab.boxes[1] ? "bg-gray-700" : ""
+                      isTab.boxes.display && isTab.boxes.num == 1
+                        ? "bg-gray-700"
+                        : ""
                     }`}
                     onClick={() => changeTab("boxes", 1)}
                   >

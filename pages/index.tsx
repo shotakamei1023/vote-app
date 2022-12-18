@@ -1,9 +1,9 @@
+import { NextPage } from "next";
 import { BoxList } from "../components/BoxList";
-import { User } from "../utils/firebase/users";
 import { authInfo } from "./_app";
 import { useAtom } from "jotai";
 
-const Home = ({}: User) => {
+const Home: NextPage = () => {
   const [isAuthInfo, setAuthInfo] = useAtom(authInfo);
   return (
     <>
