@@ -14,6 +14,8 @@ const messageAtom = atom({
   register: false,
 });
 
+const choiceBoxAtom = atom("");
+
 type Props = {
   user: User;
 };
@@ -21,9 +23,8 @@ type Props = {
 export const BoxList = ({ user }: Props) => {
   const { isLoading, boxes } = useBoxes();
   const [isMessage, setMessage] = useAtom(messageAtom);
+  const [isChoiceBox, setChoiceBox] = useAtom(choiceBoxAtom);
   const pathParam = useRouter().query.register;
-
-  console.log(pathParam);
 
   useLayoutEffect(() => {
     //登録成功時アラート表示
@@ -81,9 +82,9 @@ export const BoxList = ({ user }: Props) => {
   if (isLoading) return <Loading />;
   return (
     <section className="bg-white dark:bg-gray-900 w-full col-[1_/_span_2]">
-      <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6 ">
+      <div className="py-8 px-4 mx-auto max-w-lg sm:max-w-screen-sm md:max-w-screen-sm lg:max-w-screen-md xl:max-w-screen-2xl lg:py-16 lg:px-6 xl:px-10 2xl:px-20">
         <div className="mx-auto max-w-screen-sm text-center mb-8 lg:mb-16">
-          <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
+          <h2 className="mb-4 text-3xl md:text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
             好きな顔へ清き1票を
           </h2>
           <p className="font-light text-gray-500 sm:text-xl dark:text-gray-400">
@@ -134,45 +135,51 @@ export const BoxList = ({ user }: Props) => {
             <></>
           )}
         </div>
-        <ul className="grid gap-8 mb-6 lg:mb-16 md:grid-cols-2">
+        <ul className="flex items-center justify-between mb-4 md:mb-8 flex-wrap md:flex-none">
           {boxes.map((box: Box, index: number) => {
             return (
-              <li key={index}>
-                <div className="items-center bg-gray-50 rounded-lg shadow sm:flex dark:bg-gray-800 dark:border-gray-700">
-                  <div>
-                    <img
-                      src={
-                        "https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/sofia-mcguire.png"
-                      }
-                      alt="プロフィール写真"
-                      className="w-full rounded-lg sm:rounded-none sm:rounded-l-lg"
-                    />
-                  </div>
-                  <div className="p-5">
-                    <h3 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
-                      {box.name}さん
-                    </h3>
-                    <span className="text-gray-500 dark:text-gray-400">
-                      Marketing & Sale
-                    </span>
-                    <p className="mt-3 mb-4 font-light text-gray-500 dark:text-gray-400">
-                      ここに紹介文が入ります。
+              <li
+                key={index}
+                className={`max-w-[164px] sm:max-w-[240px] md:max-w-[280px] lg:max-w-[300px] hover:border-blue-800 cursor-pointer bg-white border-4 border-gray-200 rounded-lg shadow-md dark:bg-gray-800 mb-4 xl:mb-0 ${
+                  box.id == isChoiceBox
+                    ? "  border-blue-500"
+                    : "dark:border-gray-700"
+                }`}
+                onClick={() => setChoiceBox(box.id)}
+              >
+                <div className="rounded-lg">
+                  <img
+                    className="rounded-t-md w-full"
+                    src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/sofia-mcguire.png"
+                    alt=""
+                  />
+
+                  <div className="p-2 md:p-5">
+                    <h5 className="mb-1 md:mb-2 text-xl md:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                      {box.name}
+                    </h5>
+
+                    <p className="mb-1 md:mb-3 font-normal text-gray-700 dark:text-gray-400 text-sm md:text-base">
+                      Here are the biggest enterprise technology acquisitions of
+                      2021 so far, in reverse chronological order.
                     </p>
-                    <button
-                      type="button"
-                      onClick={() => vote(box.id)}
-                      className="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800"
-                    >
-                      <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-                        投票する
-                      </span>
-                    </button>
                   </div>
                 </div>
               </li>
             );
           })}
         </ul>
+        <button
+          type="button"
+          className={` text-white hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:hover:bg-orange-600 dark:focus:ring-blue-800 w-full max-w-3xl mx-auto block duration-150 ${
+            isChoiceBox == ""
+              ? " pointer-events-none bg-blue-900 opacity-20"
+              : " pointer-events-auto bg-blue-600 opacity-100"
+          }`}
+          onClick={() => vote(isChoiceBox)}
+        >
+          <span className="">投票する</span>
+        </button>
       </div>
     </section>
   );
