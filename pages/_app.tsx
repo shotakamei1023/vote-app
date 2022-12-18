@@ -37,7 +37,7 @@ export default function App({ Component, pageProps }: AppProps) {
   //ユーザー情報取得
   useEffect(() => {
     setLoading(true);
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    onAuthStateChanged(auth, async (user) => {
       //認証確認
       if (user) {
         const uid = user.uid;
@@ -74,13 +74,12 @@ export default function App({ Component, pageProps }: AppProps) {
       // ユーザー情報がない時auth周りのページを見えないようにする
       else {
         setLoading(false);
-        if (path != "/admin/") {
+        if (path == "/admin") {
           router.push("/auth/register/");
         } else {
         }
       }
     });
-    unsubscribe();
   }, []);
 
   if (isLoading) {
