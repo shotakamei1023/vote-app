@@ -1,58 +1,34 @@
-import "../../utils/firebase/init";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc, getFirestore, collection } from "firebase/firestore";
-import { atom, useAtom } from "jotai";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
+import { atom, useAtom } from "jotai";
 import Link from "next/link";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc, getFirestore } from "firebase/firestore";
+
+import {
+  chackEmail,
+  chackPassword,
+  changeMessage,
+} from "../../utils/auth/validation";
 
 const nameAtom = atom("");
 const emailAtom = atom("");
 const passwordAtom = atom("");
 const create = atom(true);
-const Error = atom({
+export const ErrorAtom = atom({
   email: false,
   password: false,
 });
 const ErrorMessage = atom("");
 
-const RegisterPage: NextPage = () => {
+export const RegisterPage: NextPage = () => {
+  const router = useRouter();
   const [isName, setName] = useAtom(nameAtom);
   const [isEmail, setEmail] = useAtom(emailAtom);
   const [isPassword, setPassword] = useAtom(passwordAtom);
-  const [isError, setError] = useAtom(Error);
   const [iscreate, setcreate] = useAtom(create);
+  const [isError, setError] = useAtom(ErrorAtom);
   const [isErrorMessage, setErrorMessage] = useAtom(ErrorMessage);
-  const router = useRouter();
-
-  //メールアドレスの正規表現（半角英数４桁に一致）
-  var regex = new RegExp(
-    /^[a-zA-Z0-9_.+-]+@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.)+[a-zA-Z]{2,}$/
-  );
-  const chackEmail = (value: string) => {
-    //判定
-    setError({
-      email: !regex.test(value),
-      password: false,
-    });
-    return !regex.test(value);
-  };
-
-  const chackPassword = (value: string) => {
-    if (value.length < 6) {
-      setError({
-        email: isError.email,
-        password: true,
-      });
-      return true;
-    } else {
-      setError({
-        email: isError.email,
-        password: false,
-      });
-      return false;
-    }
-  };
 
   const signup = () => {
     setcreate(false);
@@ -60,11 +36,9 @@ const RegisterPage: NextPage = () => {
     createUserWithEmailAndPassword(auth, isEmail, isPassword)
       .then((userCredential) => {
         const user = userCredential.user;
-        console.log("成功");
-        console.log(user);
-        //usersテーブルにも保存
         return user;
       })
+      //usersテーブルにも保存
       .then((user) => {
         const db = getFirestore();
         setDoc(doc(db, "users", user.uid), {
@@ -78,23 +52,12 @@ const RegisterPage: NextPage = () => {
         router.push("/");
       })
       .catch((error) => {
-        const errorCode = error.code;
         const errorMessage = error.message;
-        console.log("失敗");
-        console.log(errorCode);
-        console.log(errorMessage);
         setErrorMessage(errorMessage);
         setcreate(true);
       });
   };
 
-  const changeMessage = (value: string) => {
-    if (value == "Firebase: Error (auth/email-already-in-use).") {
-      return "既にこちらのメールアドレスは登録されています。";
-    } else {
-      return value;
-    }
-  };
   return (
     <>
       <section className="bg-gray-50 dark:bg-gray-900">
@@ -140,7 +103,7 @@ const RegisterPage: NextPage = () => {
                     required
                     onChange={(event) => {
                       setEmail(event.target.value);
-                      chackEmail(event.target.value);
+                      chackEmail(event.target.value, isError, setError);
                     }}
                   />
                   {isError.email && isEmail ? (
@@ -169,7 +132,7 @@ const RegisterPage: NextPage = () => {
                     required
                     onChange={(event) => {
                       setPassword(event.target.value);
-                      chackPassword(event.target.value);
+                      chackPassword(event.target.value, isError, setError);
                     }}
                   />
                   {isError.password && isPassword ? (

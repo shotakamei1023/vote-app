@@ -35,7 +35,7 @@ export const BoxList = ({ user }: any) => {
   };
 
   return (
-    <section className="bg-white dark:bg-gray-900 w-full md:h-screen col-[1_/_span_2]">
+    <section className="bg-white dark:bg-gray-900 w-full col-[1_/_span_2]">
       <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6 ">
         <div className="mx-auto max-w-screen-sm text-center mb-8 lg:mb-16">
           <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
