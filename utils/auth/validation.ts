@@ -41,6 +41,12 @@ export const checkPassword = (
 export const changeMessage = (value: string) => {
   if (value == "Firebase: Error (auth/email-already-in-use).") {
     return "既にこちらのメールアドレスは登録されています。";
+  }
+  if (value == "Firebase: Error (auth/invalid-email).") {
+    return "メールアドレスの形式が正しくありません";
+  }
+  if (value == "Firebase: Error (auth/wrong-password).") {
+    return "メールアドレスまたはパスワードが違います";
   } else {
     return value;
   }

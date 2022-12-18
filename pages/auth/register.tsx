@@ -14,7 +14,7 @@ import {
 const nameAtom = atom("");
 const emailAtom = atom("");
 const passwordAtom = atom("");
-const create = atom(true);
+const create = atom(false);
 export const ErrorAtom = atom({
   email: false,
   password: false,
@@ -31,7 +31,7 @@ export const RegisterPage: NextPage = () => {
   const [isErrorMessage, setErrorMessage] = useAtom(ErrorMessage);
 
   const signup = () => {
-    setcreate(false);
+    setcreate(true);
     const auth = getAuth();
     createUserWithEmailAndPassword(auth, isEmail, isPassword)
       .then((userCredential) => {
@@ -46,7 +46,7 @@ export const RegisterPage: NextPage = () => {
           auth_id: isEmail,
           role: 1,
         });
-        setcreate(true);
+        setcreate(false);
       })
       .then(() => {
         router.push("/");
@@ -54,7 +54,7 @@ export const RegisterPage: NextPage = () => {
       .catch((error) => {
         const errorMessage = error.message;
         setErrorMessage(errorMessage);
-        setcreate(true);
+        setcreate(false);
       });
   };
 
@@ -158,7 +158,20 @@ export const RegisterPage: NextPage = () => {
                   }`}
                   onClick={() => signup()}
                 >
-                  {iscreate ? "アカウントを作成する" : "アカウントを作成中です"}
+                  <span
+                    className={`${
+                      isEmail &&
+                      isPassword &&
+                      isError.email == false &&
+                      isError.password == false
+                        ? "opacity-100"
+                        : "opacity-40"
+                    }`}
+                  >
+                    {!iscreate
+                      ? "アカウントを作成する"
+                      : "アカウントを作成中です"}
+                  </span>
                 </button>
                 <p className="text-sm text-red-600 dark:text-red-500">
                   {isErrorMessage ? changeMessage(isErrorMessage) : ""}

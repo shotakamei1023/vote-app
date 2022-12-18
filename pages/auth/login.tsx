@@ -13,6 +13,7 @@ import {
 const emailAtom = atom("");
 const passwordAtom = atom("");
 const ErrorMessage = atom("");
+const create = atom(false);
 export const ErrorAtom = atom({
   email: false,
   password: false,
@@ -112,10 +113,30 @@ const LoginPage: NextPage = () => {
                 </div>
                 <button
                   type="button"
-                  className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                  className={`w-full text-white focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:focus:ring-primary-800 ${
+                    isEmail &&
+                    isPassword &&
+                    isError.email == false &&
+                    isError.password == false &&
+                    isErrorMessage == ""
+                      ? "pointer-events-auto bg-primary-600 hover:bg-primary-700 dark:bg-primary-600 dark:hover:bg-primary-700"
+                      : "pointer-events-none dark:bg-primary-900"
+                  }`}
                   onClick={() => signin()}
                 >
-                  ログイン
+                  <span
+                    className={`${
+                      isEmail &&
+                      isPassword &&
+                      isError.email == false &&
+                      isError.password == false &&
+                      isErrorMessage == ""
+                        ? "opacity-100"
+                        : "opacity-40"
+                    }`}
+                  >
+                    ログイン
+                  </span>
                 </button>
                 <p className="text-sm text-red-600 dark:text-red-500">
                   {isErrorMessage ? changeMessage(isErrorMessage) : ""}
