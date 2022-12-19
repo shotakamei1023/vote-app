@@ -40,7 +40,7 @@ export const Header = () => {
       }`}
     >
       {isLoading ? (
-        <nav className="border-gray-200 py-4 bg-white dark:bg-gray-800 md:px-4">
+        <nav className="border-gray-200 py-2 bg-white dark:bg-gray-800 md:px-4">
           <div className="flex flex-wrap justify-between items-center max-w-screen-2xl mx-auto">
             {isAuthInfo.role == 0 ? (
               path != "/admin" ? (
