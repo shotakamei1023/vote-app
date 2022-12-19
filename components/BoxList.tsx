@@ -177,10 +177,14 @@ export const BoxList = ({ user }: Props) => {
             isChoiceBox == ""
               ? " pointer-events-none bg-blue-900"
               : " pointer-events-auto bg-blue-600"
-          } ${user.vote || isMessage.success ? "bg-orange-600" : ""}`}
+          } ${user.vote || isMessage.success ? "bg-orange-800" : ""}`}
           onClick={() => vote(isChoiceBox)}
         >
-          {user.vote || isMessage.success ? "投票完了しました" : "投票する"}
+          <span
+            className={`${user.vote || isMessage.success ? "opacity-80" : ""}`}
+          >
+            {user.vote || isMessage.success ? "投票完了しました" : "投票する"}
+          </span>
         </button>
       </div>
     </section>
