@@ -25,7 +25,6 @@ export const BoxList = ({ user }: Props) => {
   const [isMessage, setMessage] = useAtom(messageAtom);
   const [isChoiceBox, setChoiceBox] = useAtom(choiceBoxAtom);
   const pathParam = useRouter().query.register;
-  console.log(user);
   useLayoutEffect(() => {
     //登録成功時アラート表示
     const registerFlug = (): boolean => {

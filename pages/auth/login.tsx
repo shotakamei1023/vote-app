@@ -13,7 +13,6 @@ import {
 const emailAtom = atom("");
 const passwordAtom = atom("");
 const ErrorMessage = atom("");
-const create = atom(false);
 export const ErrorAtom = atom({
   email: false,
   password: false,
@@ -33,7 +32,7 @@ const LoginPage: NextPage = () => {
         userCredential.user;
       })
       .then(() => {
-        router.push("/");
+        router.push("/vote");
       })
       .catch((error) => {
         const errorMessage = error.message;
