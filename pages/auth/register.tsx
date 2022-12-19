@@ -49,10 +49,13 @@ export const RegisterPage: NextPage = () => {
         setcreate(false);
       })
       .then(() => {
-        router.push({
-          pathname: "/", //URL
-          query: { register: "success" }, //検索クエリ
-        });
+        router.push(
+          {
+            pathname: "/vote", //URL
+            query: { register: "success" }, //検索クエリ
+          },
+          "/vote"
+        );
       })
       .catch((error) => {
         const errorMessage = error.message;

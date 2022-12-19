@@ -25,7 +25,7 @@ module.exports = {
       },
 
       gridTemplateRows: {
-        adminLeyout: "70px 1fr",
+        adminLeyout: "54px 1fr",
         mainLeyout: "60px 1fr",
       },
     },

@@ -3,7 +3,7 @@ export type User = {
   auth_id: string;
   name: string;
   role?: 0;
-  vote?: boolean;
+  vote?: string;
 };
 
 export type Box = {

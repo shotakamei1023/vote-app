@@ -23,7 +23,7 @@ export const authInfo = atom<User>({
   auth_id: "",
   name: "",
   role: 0,
-  vote: false,
+  vote: "",
 });
 
 const loadingAtom = atom(true);
@@ -47,16 +47,24 @@ export default function App({ Component, pageProps }: AppProps) {
         if (docSnap.data()) {
           //投票データ取得
           const voteSnap = await getDocs(query(collectionGroup(db, "votes")));
-          const vote_user_ids = voteSnap.docs.map((item, index: number) => {
-            return item.data().user_id;
-          });
+          const vote_box_idSnap = voteSnap.docs.filter(
+            (item) => item.data().user_id == uid
+          );
+
+          const vote_box_id = () => {
+            if (vote_box_idSnap[0]) {
+              return vote_box_idSnap[0].data().box_id;
+            } else {
+              return "";
+            }
+          };
           //ユーザー情報格納
           setAuthInfo({
             id: uid,
             auth_id: docSnap.data()?.auth_id,
             name: docSnap.data()?.name,
             role: docSnap.data()?.role,
-            vote: vote_user_ids.includes(uid),
+            vote: vote_box_id(),
           });
           if (path != "/admin") {
           } else {
